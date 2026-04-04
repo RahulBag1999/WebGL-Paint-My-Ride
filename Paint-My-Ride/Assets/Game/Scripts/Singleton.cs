@@ -67,14 +67,4 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         if (_instance == this) _instance = null;
     }
-
-#if UNITY_EDITOR
-    // Handles "Domain Reload disabled" (Enter Play Mode Options)
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetDomainStatics()
-    {
-        _instance = null;
-        _applicationIsQuitting = false;
-    }
-#endif
 }

@@ -5,23 +5,23 @@ public static class Utility
         switch (cellType) 
         {
             case GridCellType.REDCELL:
-            case GridCellType.REDCAR:
+            case GridCellType.REDCAT:
                 return ColorCode.RED;
 
             case GridCellType.GREENCELL:
-            case GridCellType.GREENCAR:
+            case GridCellType.GREENCAT:
                 return ColorCode.GREEN;
 
             case GridCellType.BLUECELL:
-            case GridCellType.BLUECAR:
+            case GridCellType.BLUECAT:
                 return ColorCode.BLUE;
 
             case GridCellType.YELLOWCELL: 
-            case GridCellType.YELLOWCAR:
+            case GridCellType.YELLOWCAT:
                 return ColorCode.YELLOW;
 
             case GridCellType.PURPLECELL:
-            case GridCellType.PURPLECAR:
+            case GridCellType.PURPLECAT:
                 return ColorCode.PURPLE;
         }
         return ColorCode.NONE;

@@ -5,29 +5,31 @@ using UnityEngine;
 
 public class NonMovableCell : MonoBehaviour
 {
-    private ColorData colorData;
     public TMP_Text cellIndex;
-    public MeshRenderer cellRenderer;
+    public SpriteRenderer spriteRenderer;
 
     private ColorCode colorCode;
     public ColorCode originalColorCode => colorCode;
     private ColorCode appliedColorCode = ColorCode.NONE;
     public ColorCode AppliedColorCode => appliedColorCode;
 
+    private EssentialConfigData _essentialConfigData;
     private LevelConfig levelConfig;
     private GameSettings gameSettings;
-    private Material currentMat;  
+    private ColorData colorData;
 
     private int row;
     private int column;
     private int index;
 
-    private bool isColoured = false;
+    private bool isColoured = false;  
 
-    private void Awake()
+    public void Init(EssentialConfigData essentialConfigData)
     {
-        colorData = Resources.Load<ColorData>(nameof(ColorData));
-        gameSettings = Resources.Load<GameSettings>(nameof(GameSettings));
+        _essentialConfigData = essentialConfigData;
+
+        colorData = _essentialConfigData.AccessConfig<ColorData>();
+        gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
 
         cellIndex.enabled = gameSettings.isDebug;
     }
@@ -48,21 +50,15 @@ public class NonMovableCell : MonoBehaviour
         {
             if (config.fullGrid[id].cellType != GridCellType.EMPTY && 
                 (
-                config.fullGrid[id].cellType != GridCellType.REDCAR ||
-                config.fullGrid[id].cellType != GridCellType.GREENCAR ||
-                config.fullGrid[id].cellType != GridCellType.YELLOWCAR ||
-                config.fullGrid[id].cellType != GridCellType.BLUECAR
+                config.fullGrid[id].cellType != GridCellType.REDCAT ||
+                config.fullGrid[id].cellType != GridCellType.GREENCAT ||
+                config.fullGrid[id].cellType != GridCellType.YELLOWCAT ||
+                config.fullGrid[id].cellType != GridCellType.BLUECAT
                 ))
             {
                 colorCode = Utility.GetColorCodeByGridCellType(config.fullGrid[id].cellType);
-                SetColorCode(colorCode);
             }
         }
-    }
-
-    private void SetColorCode(ColorCode code)
-    {
-        colorCode = code;
     }
 
     public bool HasColorMatched()
@@ -73,22 +69,20 @@ public class NonMovableCell : MonoBehaviour
     public bool HasCellColored()
     {
         return isColoured;
-    }
+    }   
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Car"))
         {
-            if (other.TryGetComponent(out MovableCell carCell))
+            if (other.TryGetComponent(out MovableCell mCell))
             {
-                if (appliedColorCode != carCell.ColorCode)
+                if (appliedColorCode != mCell.ColorCode)
                 {
-                    currentMat = null;
-                    appliedColorCode = carCell.ColorCode;
-                    currentMat = colorData.GetColorDatum(appliedColorCode).material;
+                    appliedColorCode = mCell.ColorCode;
+                    spriteRenderer.sprite = colorData.GetColorDatum(appliedColorCode).coloredTile;
 
                     if (!isColoured) isColoured = true;
-                    cellRenderer.material = currentMat;
                 }
             }
         }

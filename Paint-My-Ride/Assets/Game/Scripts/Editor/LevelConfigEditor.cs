@@ -165,13 +165,15 @@ public class LevelConfigEditor : Editor
             case GridCellType.BLUECELL:
             case GridCellType.YELLOWCELL:
             case GridCellType.PURPLECELL:
+            case GridCellType.ORANGECELL:
                 return "NMC";
 
-            case GridCellType.REDCAR:
-            case GridCellType.GREENCAR:
-            case GridCellType.BLUECAR:
-            case GridCellType.YELLOWCAR:
-            case GridCellType.PURPLECAR:
+            case GridCellType.REDCAT:
+            case GridCellType.GREENCAT:
+            case GridCellType.BLUECAT:
+            case GridCellType.YELLOWCAT:
+            case GridCellType.PURPLECAT:
+            case GridCellType.ORANGECAT:
                 return "MC";
         }
         return "N/A";

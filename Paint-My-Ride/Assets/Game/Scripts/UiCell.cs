@@ -14,16 +14,19 @@ public class UiCell : MonoBehaviour
     private int column;
     private int index;
 
+    private EssentialConfigData _essentialConfigData;
     private LevelConfig levelConfig;
     private GameSettings gameSettings;
 
-    private void Awake()
+    public void Init(EssentialConfigData essentialConfigData)
     {
-        colorData = Resources.Load<ColorData>(nameof(ColorData));
-        gameSettings = Resources.Load<GameSettings>(nameof(GameSettings));
+        _essentialConfigData = essentialConfigData;
+
+        colorData = _essentialConfigData.AccessConfig<ColorData>();
+        gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
 
         cellIndex.enabled = gameSettings.isDebug;
-    }
+    }   
 
     public void SetData(LevelConfig config, int id)
     {
@@ -37,7 +40,7 @@ public class UiCell : MonoBehaviour
 
         cellIndex.text = $"{row},{column}";
 
-        cellImage.color = colorData.GetColorDatum(GetColorCode(cellType)).color;
+        cellImage.sprite = colorData.GetColorDatum(GetColorCode(cellType)).coloredTile;
     }
 
     private ColorCode GetColorCode(GridCellType cellType)

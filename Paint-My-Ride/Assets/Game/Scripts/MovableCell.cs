@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class MovableCell : MonoBehaviour
 {
     private LevelConfig levelConfig;
     private GameSettings gameSettings;
+    private MovableCellData movableCellData;
+
+    private SpriteRenderer sr;
 
     private int index;
     private int row;
@@ -20,9 +24,31 @@ public class MovableCell : MonoBehaviour
     private ColorCode colorCode = ColorCode.NONE;
     public ColorCode ColorCode { get { return colorCode; } }
 
-    private void Awake()
+    // -------------------- Animation --------------------
+    private AnimationState currentState;
+    private ViewDirection currentView = ViewDirection.Side;
+
+    private Sprite[] currentSprites;
+    private float frameRate = 6f;
+
+    private int frame;
+    private float timer;
+
+    private MovableCellData.CellData cellData;
+    // ---------------------------------------------------
+
+    private GameplayHelper _gameplayHelper;
+    private EssentialConfigData _essentialConfigData;
+
+    public void Init(GameplayHelper gameplayHelper, EssentialConfigData essentialConfigData)
     {
-        gameSettings = Resources.Load<GameSettings>(nameof(GameSettings));
+        _gameplayHelper = gameplayHelper;
+        _essentialConfigData = essentialConfigData;
+
+        gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
+        movableCellData = _essentialConfigData.AccessConfig<MovableCellData>();
+
+        sr = GetComponent<SpriteRenderer>();
     }
 
     public void SetData(LevelConfig lc, int id, Vector3 dPos)
@@ -36,71 +62,158 @@ public class MovableCell : MonoBehaviour
 
         gameObject.name = $"MC {row},{col}";
 
+        // 🔥 Decide which cat this is
         cellType = levelConfig.fullGrid[index].cellType;
 
+        // 🔥 Optional: color logic
         colorCode = Utility.GetColorCodeByGridCellType(cellType);
+
+        // 🔥 Load animation data for this cat
+        cellData = movableCellData.GetCellData(cellType);
+
+        if (cellData == null)
+        {
+            Debug.LogError($"No CellData found for {cellType}");
+            return;
+        }
+
+        // 🔥 Start idle animation
+        SetState(AnimationState.Idle);
 
         SetOrientation();
     }
 
     private void SetOrientation()
     {
-        //Left   
+        // Left (face right → Side view)
         if (col == levelConfig.Columns - 1)
         {
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            sr.flipX = false;
+            SetView(ViewDirection.Side);
         }
-        //Right
-        if(col == 0)
+        // Right (face left → Side view)
+        else if (col == 0)
         {
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
-        }       
-        //Top
-        if(row == 0)
-        {
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            sr.flipX = true;
+            SetView(ViewDirection.Side);
         }
-        //Bottom
-        if(row == levelConfig.Rows - 1)
+        // Top (face down → TopDown view)
+        else if (row == 0)
         {
-            transform.rotation = Quaternion.Euler(0f, -180f, 0f);
+            SetView(ViewDirection.TopDown);
+        }
+        // Bottom (face up → TopDown view)
+        else if (row == levelConfig.Rows - 1)
+        {
+            SetView(ViewDirection.TopDown);
         }
     }
 
     private void OnMouseDown()
     {
-        if (GameManager.Instance.IsGameOver)
+        if (_gameplayHelper.IsGameOver)
             return;
 
         if (hasMovedToDestCell)
             return;
 
-        if (GameManager.Instance.IsCellMoving)
+        if (_gameplayHelper.IsCellMoving)
             return;
 
-        if (!canMove) canMove = true;
+        if (!canMove)
+        {
+            canMove = true;
+
+            // 🔥 Start walking animation
+            SetState(AnimationState.Walk);
+        }
     }
 
     private void Update()
     {
+        // 🔥 Animation update
+        UpdateAnimation();
+
         if (!canMove) return;
 
-        GameManager.Instance.CellMoving(true);
-        transform.position = Vector3.MoveTowards(transform.position, destinationCellPos, gameSettings.cellMoveSpeed * Time.deltaTime);
+        _gameplayHelper.CellMoving(true);
 
-        if(Vector3.Distance(transform.position, destinationCellPos) < 0.01f)
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            destinationCellPos,
+            gameSettings.cellMoveSpeed * Time.deltaTime
+        );
+
+        if (Vector3.Distance(transform.position, destinationCellPos) < 0.01f)
         {
             canMove = false;
             hasMovedToDestCell = true;
 
-            GameManager.Instance.CellMoving(false);
-            GameManager.Instance.OnCellColorCompletion?.Invoke();
+            // 🔥 Back to idle
+            SetState(AnimationState.Idle);
+
+            _gameplayHelper.CellMoving(false);
+            _gameplayHelper.OnCellColorCompletion?.Invoke();
         }
     }
 
     public bool IsMovable()
     {
-        if(hasMovedToDestCell) return false;
-        else return true;
+        return !hasMovedToDestCell;
+    }
+
+    // =====================================================
+    // 🔥 Animation Logic
+    // =====================================================
+
+    private void SetState(AnimationState newState)
+    {
+        //if (currentState == newState) return;
+        //if (cellData == null) return;
+
+        var anim = cellData.GetAnimation(newState, currentView);
+
+        if (anim == null || anim.sprites == null || anim.sprites.Count == 0)
+        {
+            Debug.LogWarning($"No animation for {newState} - {currentView}");
+            return;
+        }
+
+        currentState = newState;
+
+        currentSprites = anim.sprites.ToArray();
+        frameRate = anim.frameRate;
+
+        frame = 0;
+        timer = 0f;
+
+        sr.sprite = currentSprites[0];
+    }
+
+    private void UpdateAnimation()
+    {
+        if (currentSprites == null || currentSprites.Length == 0) return;
+
+        timer += Time.deltaTime;
+
+        if (timer >= 1f / frameRate)
+        {
+            timer = 0f;
+            frame = (frame + 1) % currentSprites.Length;
+            sr.sprite = currentSprites[frame];
+        }
+    }
+
+    // =====================================================
+    // 🔥 (Optional) View Switcher (for future use)
+    // =====================================================
+    public void SetView(ViewDirection view)
+    {
+        if (currentView == view) return;
+
+        currentView = view;
+
+        // Refresh animation with new view
+        SetState(currentState);
     }
 }
