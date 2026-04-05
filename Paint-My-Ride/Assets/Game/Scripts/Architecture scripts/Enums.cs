@@ -64,3 +64,17 @@ public enum ViewDirection
     Side,
     TopDown
 }
+
+public enum GameLoseType
+{
+    NONE,
+    TIMEUP,
+    WRONGPLAY
+}
+
+public enum GameEndType
+{
+    NONE,
+    WIN,
+    LOSE
+}

@@ -52,46 +52,26 @@ public sealed class PlayerSaveData
 [Serializable]
 public sealed class GameCurrency
 {
-    [JsonProperty(PropertyName = "cashCount")]
-    private long _cashCount = 0;
-
-    [JsonProperty(PropertyName = "earnedCashCount")]
-    private long _earnedCashCount = 0;
+    [JsonProperty(PropertyName = "coinCount")]
+    private long _coinCount = 0;
 
     [JsonIgnore]
-    public long Cash => _cashCount;
-
-    [JsonIgnore]
-    public long EarnedCash => _earnedCashCount;
+    public long Coins => _coinCount;
 
     /// <summary>
     /// Update the amount of cash the player has.
     /// </summary>
-    /// <param name="cashCount">Amount of cash to be increased or deducted.
+    /// <param name="coinCount">Amount of coin to be increased or deducted.
     /// A positive value will add cash.
     /// A negatve value will deduct cash.</param>
-    public void UpdateCash(long cashCount)
+    public void UpdateCoin(long coinCount)
     {
-        _cashCount += cashCount;
-        if (_cashCount < 0)
+        _coinCount += coinCount;
+        if (_coinCount < 0)
         {
-            _cashCount = 0;
+            _coinCount = 0;
         }
-        //GameHelper.Instance.InvokeAction(GameConstants.CashAmountUpdated, _cashCount);
-    }
-
-    public void UpdateEarnedCash(long earnedCashCount)
-    {
-        _earnedCashCount += earnedCashCount;
-        if (_earnedCashCount < 0)
-        {
-            earnedCashCount = 0;
-        }
-    }
-
-    public long GetEarnedCashAmount()
-    {
-        return _earnedCashCount;
+        GameHelper.Instance.InvokeAction(GameConstants.CoinAmountUpdated, _coinCount);
     }
 }
 

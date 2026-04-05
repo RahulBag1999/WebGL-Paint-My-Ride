@@ -10,22 +10,27 @@ public class GameplayHelper : MonoBehaviour
     private PopupHandler _popupHandler;
     private EssentialConfigData _essentialConfigData;
 
-    public Action OnCellColorCompletion;
-
     private List<NonMovableCell> nmCellList = new List<NonMovableCell>();
     private List<MovableCell> mCellList = new List<MovableCell>();
 
-    private bool isCellMoving = false;
-    private bool isGameOver = false;
-    public bool IsCellMoving => isCellMoving;
-    public bool IsGameOver => isGameOver;
+    private bool _isCellMoving = false;
+    private bool _isGameOver = false;
+    private bool _isGamePause = false;
+    public bool IsCellMoving => _isCellMoving;
+    public bool IsGameOver => _isGameOver;
 
-    private GameSettings gameSettings;
-    private LevelContainer levelContainer;
-    private GameThemeData gameThemeData;
+    private GameSettings _gameSettings;
+    private LevelContainer _levelContainer;
+    private LevelTimingData _levelTimingData;
 
-    private int currentLevel;
-    private int currentThemeId = -1;    
+    private int _currentLevel = 0;    
+    private float _levelTimeRemaining;
+
+    private bool _isGameContinue = false;
+    private GameLoseType _gameLoseType = GameLoseType.NONE;
+    private GameEndType _gameEndType = GameEndType.NONE;
+
+    public bool IsGameContinue => _isGameContinue;
 
     public  void Init(PopupHandler popupHandler, GridGenerator gridGenerator, EssentialConfigData essentialConfigData)
     {
@@ -33,32 +38,73 @@ public class GameplayHelper : MonoBehaviour
         _popupHandler = popupHandler;
         _essentialConfigData = essentialConfigData;
 
-        gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
-        gameThemeData = _essentialConfigData.AccessConfig<GameThemeData>();
-        levelContainer = _essentialConfigData.AccessConfig<LevelContainer>();
+        _gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
+        _levelTimingData = _essentialConfigData.AccessConfig<LevelTimingData>();
+        _levelContainer = _essentialConfigData.AccessConfig<LevelContainer>();
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        OnCellColorCompletion += CellColorCompletion;
+        if (!_isGameContinue)
+            return;
+
+        UpdateGameplay();
     }
 
-    private void OnDisable()
+    public void InitiateGameplay(int level)
     {
-        OnCellColorCompletion -= CellColorCompletion;
+        _isGameOver = false;
+
+        _currentLevel = level;
+        _levelTimeRemaining = _levelTimingData.GetTimeForLevel(_currentLevel);
+        _isGameContinue = true;
+
+        GameHelper.Instance.StartListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
+        GameHelper.Instance.StartListening(GameConstants.CellColorCompletion, CellColorCompletion);
     }
 
-    public void InitiateGameplay()
+    private void UpdateGameplay()
     {
-        if (nmCellList.Count > 0) nmCellList.Clear();
-        if (mCellList.Count > 0) mCellList.Clear();
+        if (_isGamePause)
+            return;
 
-        isGameOver = false;
+        if (_gameEndType == GameEndType.WIN || _gameEndType == GameEndType.LOSE)
+            return;
+
+        if (_levelTimeRemaining > 0f)
+        {
+            _levelTimeRemaining -= Time.deltaTime;
+            GameHelper.Instance.InvokeAction(GameConstants.OnTimerUpdate, (int)_levelTimeRemaining);
+        }
+        else
+        {
+            HandleTimeUp();
+        }
     }
 
-    public void CellMoving(bool isMove)
+    private void HandleTimeUp()
     {
-        isCellMoving = isMove;
+        if (_isCellMoving)
+        {
+            if (_gameEndType == GameEndType.WIN)
+            {
+                return;
+            }
+            else if (_gameEndType == GameEndType.LOSE)
+            {
+                _gameLoseType = GameLoseType.WRONGPLAY;
+            }
+        }
+        else
+        {
+            _gameLoseType = GameLoseType.TIMEUP;
+        }
+        _isGameContinue = false;
+    }    
+
+    public void CellMovingStatus(bool isMove)
+    {
+        _isCellMoving = isMove;
     }
 
     public void AddNmCellsToList(NonMovableCell nmCell)
@@ -71,7 +117,7 @@ public class GameplayHelper : MonoBehaviour
         mCellList.Add(mCell);
     }
 
-    private void CellColorCompletion()
+    private void CellColorCompletion(object obj)
     {
         bool hasAllCellColored = nmCellList.All(x => x.HasCellColored());
         bool hasAllCellColorMatched = nmCellList.All(x => x.HasColorMatched());
@@ -82,12 +128,14 @@ public class GameplayHelper : MonoBehaviour
             if (hasAllCellColorMatched)
             {
                 //win
+                _gameEndType = GameEndType.WIN;
                 StartCoroutine(DelayGameEnd(true));
             }
             else
             {
                 if (!hasRemainingMovableCell)
                 {
+                    _gameEndType = GameEndType.LOSE;
                     StartCoroutine(DelayGameEnd(false));
                 }
                 else
@@ -104,53 +152,60 @@ public class GameplayHelper : MonoBehaviour
         }
     }
 
-    private IEnumerator DelayGameEnd(bool hasWon)
+    private void HandleGameplayPauseStatus(object obj)
     {
-        isGameOver = true;
-
-        yield return new WaitForSeconds(hasWon ? gameSettings.gameWinDelay : gameSettings.gameLoseDelay);
-        if (hasWon)
+        bool isPause = (bool)obj;
+        Action pauseCallback = () => _isGamePause = isPause;
+        if (isPause)
         {
-            // UiController.Instance.ShowScreen<WinScreen>();
-            IncrementLevel();
+            pauseCallback();
         }
         else
         {
-            // UiController.Instance.ShowScreen<LoseScreen>();
+            StartCoroutine(DelayToResume(pauseCallback));
         }
     }
 
-    private void SetGameTheme()
+    private IEnumerator DelayToResume(Action pauseStateCallback)
     {
-        //currentThemeId = GetRandomNumber(0, gameThemeData.gameThemeList.Count);
-        //_gridGenerator.SetGridBg(gameThemeData.GetGameTheme(currentThemeId).gridBg);
+        yield return null;
+        pauseStateCallback();
     }
+
+    private IEnumerator DelayGameEnd(bool hasWon)
+    {
+        _isGameOver = true;
+
+        yield return new WaitForSeconds(hasWon ? _gameSettings.gameWinDelay : _gameSettings.gameLoseDelay);
+        if (hasWon)
+        {
+            _popupHandler.ShowPopup<WinPopup>(true);
+        }
+        else
+        {
+            _popupHandler.ShowPopup<LosePopup>(true);
+        }
+    }    
 
     private void IncrementLevel()
     {
         //PlayerPrefs.SetInt(GameConstants.LEVEL_ID, (currentLevel += 1));
         //currentLevel = PlayerPrefs.GetInt(GameConstants.LEVEL_ID, 1);
         //GameConstants.CURRENT_LEVEL_CONFIG = GetLevelConfig(currentLevel);
-    }   
+    }
 
-    public int GetRandomNumber(int minInclusive, int maxExclusive)
+    public void Cleanup()
     {
-        int newNumber;
+        if (nmCellList.Count > 0) nmCellList.Clear();
+        if (mCellList.Count > 0) mCellList.Clear();
 
-        // Safety check (optional but recommended)
-        if (maxExclusive - minInclusive <= 1)
-        {
-            Debug.LogWarning("Range too small to avoid repetition.");
-            return minInclusive;
-        }
+        _isCellMoving = false;
+        _isGameOver = false;
+        _isGamePause = false;
 
-        do
-        {
-            newNumber = UnityEngine.Random.Range(minInclusive, maxExclusive);
-        }
-        while (newNumber == currentThemeId);
+        _gameEndType = GameEndType.NONE;
 
-        currentThemeId = newNumber;
-        return newNumber;
+        GameHelper.Instance.StopListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
+        GameHelper.Instance.StopListening(GameConstants.CellColorCompletion, CellColorCompletion);
     }
 }

@@ -32,3 +32,5 @@ MonoBehaviour:
   loadingTime: 5
   dotDelay: 0.4
   maxDots: 3
+  starMiddle: {fileID: 21300000, guid: 61a13680c2431d145b831072f1fbe94b, type: 3}
+  starLR: {fileID: 21300000, guid: c211a86f2131843419c6c63756d7d10e, type: 3}

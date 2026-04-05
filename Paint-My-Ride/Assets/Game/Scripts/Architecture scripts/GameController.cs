@@ -34,10 +34,15 @@ public class GameController : MonoBehaviour, IController
                 break;
 
             case GameStates.HOME:
+                _gridGenerator.Cleanup();
+                _gameplayHelper.Cleanup();
                 break;
 
             case GameStates.GAMEPLAY:
-                _gameplayHelper.InitiateGameplay();
+                object[] dataObjects = (object[])data;
+
+                _gameplayHelper.InitiateGameplay((int)dataObjects[0]);
+                _gridGenerator.SetGridBg((int)dataObjects[1]);
                 _gridGenerator.GenerateAllGrid(GameConstants.CurrentLevelConfig);
                 break;
 

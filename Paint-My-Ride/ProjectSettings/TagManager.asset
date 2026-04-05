@@ -60,6 +60,9 @@ TagManager:
   - name: UiScreen
     uniqueID: 2061101175
     locked: 0
+  - name: UiPopup
+    uniqueID: 3826404261
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1

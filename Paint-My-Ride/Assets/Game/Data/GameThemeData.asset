@@ -15,29 +15,37 @@ MonoBehaviour:
   gameThemeList:
   - header: {fileID: 21300000, guid: 72c71942c3cba974e9e51c848ffea872, type: 3}
     coinHolder: {fileID: 21300000, guid: 239681fdbdf51ca4d9c56b7e4e86722c, type: 3}
+    targetGridBg: {fileID: 21300000, guid: d50dfa36bf7a5aa4db8309a369370809, type: 3}
     pause: {fileID: 21300000, guid: 8589cf211e8b1e749b799fbbb81695c4, type: 3}
     undo: {fileID: 21300000, guid: b99062e6e3b044a41a28eac8e6c52467, type: 3}
     gridBg: {fileID: 21300000, guid: 1acca86f34205c444872acfccd3a62ec, type: 3}
     gameBg: {fileID: 21300000, guid: 1fa26d13e2c190746bd8ab352a5a6094, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: c0e2cffcfd4728e48848ddeb0c16cc08, type: 3}
+    fontAsset: {fileID: 11400000, guid: 55a5d96b9eb6248468444296cd615c99, type: 2}
   - header: {fileID: 21300000, guid: 183d8cdef2380f443a1ada6a4c912ec4, type: 3}
     coinHolder: {fileID: 21300000, guid: 81d853e8599962a458b871246f0797b6, type: 3}
+    targetGridBg: {fileID: 21300000, guid: 1a802d93ace7d284d814d3d18679bb12, type: 3}
     pause: {fileID: 21300000, guid: 275f7af678abed044bc7425dfc2076e4, type: 3}
     undo: {fileID: 21300000, guid: aa56048342917a84da40016bd0be9e7e, type: 3}
     gridBg: {fileID: 21300000, guid: 52a0e657d0f839a4e8153561ae4b6761, type: 3}
     gameBg: {fileID: 21300000, guid: 952cff93230a3ef4584d001bacdcb1bd, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: 6649f1c16cdf0794489caa3c5863df54, type: 3}
+    fontAsset: {fileID: 11400000, guid: 346acd1957860304aa07736bbb81dcbf, type: 2}
   - header: {fileID: 21300000, guid: 11d5534e4356aa2439ac81bc223f36c1, type: 3}
     coinHolder: {fileID: 21300000, guid: 8bd9e488e9721a64d8eebbdf1b31066f, type: 3}
+    targetGridBg: {fileID: 21300000, guid: fe967e700630273468425f1e52093526, type: 3}
     pause: {fileID: 21300000, guid: 9a68a598c543e314fbb9a3bac9616590, type: 3}
     undo: {fileID: 21300000, guid: ccf391b2bd35dd9468313d5bfa16cc73, type: 3}
     gridBg: {fileID: 21300000, guid: 76e36eb1e2174e348b79b6234a4e81aa, type: 3}
     gameBg: {fileID: 21300000, guid: 207aa063e21e7164b92d33a9da734562, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: 79fe128098e16e840b7cc502f5632357, type: 3}
+    fontAsset: {fileID: 11400000, guid: 8de7bb01e12332848a59887d04fbe9e2, type: 2}
   - header: {fileID: 21300000, guid: 8c773a00df801a24e9f1191c4df7ddf3, type: 3}
     coinHolder: {fileID: 21300000, guid: d2ac961056ef91a4cae3cf53a278d10e, type: 3}
+    targetGridBg: {fileID: 21300000, guid: a772a0eb26d570146aeabdcb86d3a33c, type: 3}
     pause: {fileID: 21300000, guid: cbcee503397519149beb7957eb118827, type: 3}
     undo: {fileID: 21300000, guid: f11aec811d5e6c448a29ac54eccc6b64, type: 3}
     gridBg: {fileID: 21300000, guid: 5d1da79f108da3c42a329d92cde12a20, type: 3}
     gameBg: {fileID: 21300000, guid: f7fb5062c31e7c447ab43b577235555e, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: 4a013902d7f4a7846aafcca7c9c307b0, type: 3}
+    fontAsset: {fileID: 11400000, guid: 17d7c94508111944890d55d74955e424, type: 2}

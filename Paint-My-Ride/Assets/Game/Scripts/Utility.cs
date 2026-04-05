@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public static class Utility 
 {
     public static ColorCode GetColorCodeByGridCellType(GridCellType cellType)
@@ -25,5 +27,24 @@ public static class Utility
                 return ColorCode.PURPLE;
         }
         return ColorCode.NONE;
+    }
+
+    public static int GetRandomNumber(int currentNumber, int minInclusive, int maxExclusive)
+    {
+        int newNumber;
+
+        if (maxExclusive - minInclusive <= 1)
+        {
+            Debug.LogWarning("Range too small to avoid repetition.");
+            return minInclusive;
+        }
+
+        do
+        {
+            newNumber = Random.Range(minInclusive, maxExclusive);
+        }
+        while (newNumber == currentNumber);
+
+        return newNumber;
     }
 }

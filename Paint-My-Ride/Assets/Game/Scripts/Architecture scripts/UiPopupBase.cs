@@ -8,11 +8,13 @@ using System;
 public abstract class UiPopupBase : MonoBehaviour
 {
     protected PopupHandler _popupHandler;
+    protected EssentialConfigData _essentialConfigData;
     //protected AnimationPopup animationPopup => _animationPopup;
 
-    internal virtual void Init(PopupHandler popupHandler)
+    internal virtual void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData)
     {
         _popupHandler = popupHandler;
+        _essentialConfigData = essentialConfigData;
         //_animationPopup = GetComponent<AnimationPopup>();
     }
 

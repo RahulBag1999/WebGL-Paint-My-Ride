@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f32c1efd9d04c44a37e9d965992980, type: 3}
+  m_Name: LevelTimingData
+  m_EditorClassIdentifier: Assembly-CSharp::LevelTimingData
+  levelTimeRanges:
+  - minLevel: 1
+    maxLevel: 5
+    timeInSeconds: 60
+  - minLevel: 6
+    maxLevel: 10
+    timeInSeconds: 90
+  - minLevel: 11
+    maxLevel: 15
+    timeInSeconds: 120
+  - minLevel: 16
+    maxLevel: 20
+    timeInSeconds: 150
+  - minLevel: 21
+    maxLevel: 25
+    timeInSeconds: 180
+  - minLevel: 26
+    maxLevel: 30
+    timeInSeconds: 240

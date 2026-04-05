@@ -42,9 +42,12 @@ public class GameSettings : EssentialConfigScriptableObject
     [Header("Loading Bar Settings")]
     public float uvScrollSpeed = 1f;
     public float loadingTime = 3f;
-
     public float dotDelay = 0.4f;
     public int maxDots = 3;
+
+    [Header("Pause popup")]
+    public Sprite starMiddle;
+    public Sprite starLR;
 
     public override void Init()
     {

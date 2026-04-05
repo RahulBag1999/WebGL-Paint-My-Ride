@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -23,10 +24,15 @@ public class GameThemeData : EssentialConfigScriptableObject
     {
         public Sprite header;
         public Sprite coinHolder;
+        public Sprite targetGridBg;
         public Sprite pause;
         public Sprite undo;
         public Sprite gridBg;
         public Sprite gameBg;
         public Sprite gameBgOverlay;
+
+        [Space]
+
+        public TMP_FontAsset fontAsset;
     }
 }

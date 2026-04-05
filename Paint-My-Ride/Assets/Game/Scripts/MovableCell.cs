@@ -111,6 +111,9 @@ public class MovableCell : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!_gameplayHelper.IsGameContinue)
+            return;
+
         if (_gameplayHelper.IsGameOver)
             return;
 
@@ -136,7 +139,7 @@ public class MovableCell : MonoBehaviour
 
         if (!canMove) return;
 
-        _gameplayHelper.CellMoving(true);
+        _gameplayHelper.CellMovingStatus(true);
 
         transform.position = Vector3.MoveTowards(
             transform.position,
@@ -152,8 +155,8 @@ public class MovableCell : MonoBehaviour
             // 🔥 Back to idle
             SetState(AnimationState.Idle);
 
-            _gameplayHelper.CellMoving(false);
-            _gameplayHelper.OnCellColorCompletion?.Invoke();
+            _gameplayHelper.CellMovingStatus(false);
+            GameHelper.Instance.InvokeAction(GameConstants.CellColorCompletion, null);
         }
     }
 

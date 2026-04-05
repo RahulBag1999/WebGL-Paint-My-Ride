@@ -13,7 +13,7 @@ public class ApplicationManager : MonoBehaviour
         _playerSaveData = PlayerDataHandler.LoadPlayerData();
         _essentialConfigData = Resources.Load<EssentialConfigData>(nameof(EssentialConfigData));
         _essentialConfigData.Init();
-        _popupHandler.Init();
+        _popupHandler.Init(_essentialConfigData);
         _applicationHandler.Init(_popupHandler, _essentialConfigData);
     }
 

@@ -11,4 +11,15 @@ public class LosePopup : UiPopupBase
     {
         
     }
+
+    public void TryAgain()
+    {
+
+    }
+
+    public void Home()
+    {
+        _popupHandler.HidePopup();
+        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
+    }
 }

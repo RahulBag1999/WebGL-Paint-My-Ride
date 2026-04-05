@@ -10,11 +10,11 @@ public class PopupHandler : MonoBehaviour
     private Dictionary<Type, UiPopupBase> _uiScreenCollection = new Dictionary<Type, UiPopupBase>();
     private Stack<UiPopupBase> _currentActivePopups = new Stack<UiPopupBase>();
 
-    public void Init()
+    public void Init(EssentialConfigData essentialConfigData)
     {
         for (int i = 0; i < _uiPopups.Count; i++)
         {
-            _uiPopups[i].Init(this);
+            _uiPopups[i].Init(this, essentialConfigData);
             _uiScreenCollection.Add(_uiPopups[i].GetType(), _uiPopups[i]);
         }
     }
