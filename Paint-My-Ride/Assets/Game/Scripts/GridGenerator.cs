@@ -109,7 +109,7 @@ public class GridGenerator : MonoBehaviour
                         transform);
 
                     cell.transform.localScale = _gameSettings.nmcSize;
-                    cell.Init(_essentialConfigData);
+                    cell.Init(_gameplayHelper, _essentialConfigData);
                     cell.SetData(_currentLevelConfig, index);
 
                     _gameplayHelper.AddNmCellsToList(cell);

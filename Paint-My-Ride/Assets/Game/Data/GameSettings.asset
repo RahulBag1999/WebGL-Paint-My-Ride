@@ -15,8 +15,8 @@ MonoBehaviour:
   gameName: Paint My Ride
   isDebug: 0
   cellMoveSpeed: 5
-  gameWinDelay: 1
-  gameLoseDelay: 1
+  gameWinDelay: 0.5
+  gameLoseDelay: 0.5
   mCellPrefab: {fileID: -6498618674742936142, guid: 6319a03c6aea09d4f96f788d500b24eb, type: 3}
   nmCellPrefab: {fileID: 7172879906508089889, guid: 7946e8ac52c3f574eb39c40f7999b495, type: 3}
   mcSize: {x: 1, y: 1, z: 1}
@@ -32,5 +32,13 @@ MonoBehaviour:
   loadingTime: 5
   dotDelay: 0.4
   maxDots: 3
+  x: -0.01
+  y: -0.01
+  parallaxSpeed: 2
   starMiddle: {fileID: 21300000, guid: 61a13680c2431d145b831072f1fbe94b, type: 3}
   starLR: {fileID: 21300000, guid: c211a86f2131843419c6c63756d7d10e, type: 3}
+  levelFailContinueTime: 30
+  levelFailContinueCoin: 150
+  delayBetweenStars: 0.2
+  filledStarMid: {fileID: 21300000, guid: 61a13680c2431d145b831072f1fbe94b, type: 3}
+  filledStar: {fileID: 21300000, guid: c211a86f2131843419c6c63756d7d10e, type: 3}

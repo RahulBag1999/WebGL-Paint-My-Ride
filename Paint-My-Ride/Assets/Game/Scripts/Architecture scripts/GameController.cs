@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour, IController
 {
     [SerializeField] private GameplayHelper _gameplayHelper;
     [SerializeField] private GridGenerator _gridGenerator;
+    [SerializeField] private AudioHandler _audioHandler;
+    [SerializeField] private CloudManager _cloudManager;
 
     private PopupHandler _popupHandler;
     private EssentialConfigData _essentialConfigData;
@@ -19,6 +21,7 @@ public class GameController : MonoBehaviour, IController
         _essentialConfigData = essentialConfigData;
         _stateChanged = stateChanged;
 
+        _audioHandler.Init(_essentialConfigData);
         _gridGenerator.Init(_gameplayHelper, _essentialConfigData);
         _gameplayHelper.Init(_popupHandler, _gridGenerator, _essentialConfigData);
     }
@@ -34,19 +37,41 @@ public class GameController : MonoBehaviour, IController
                 break;
 
             case GameStates.HOME:
+                _audioHandler.HandleMusicState(PlayerDataHandler.Player.UserSettingsPreferences.MusicState);
+                _audioHandler.HandleSfxState(PlayerDataHandler.Player.UserSettingsPreferences.SfxState);
+
                 _gridGenerator.Cleanup();
                 _gameplayHelper.Cleanup();
+
+                _cloudManager.UpdateView(true);
                 break;
 
             case GameStates.GAMEPLAY:
+                _cloudManager.UpdateView(false);
                 object[] dataObjects = (object[])data;
 
-                _gameplayHelper.InitiateGameplay((int)dataObjects[0]);
-                _gridGenerator.SetGridBg((int)dataObjects[1]);
-                _gridGenerator.GenerateAllGrid(GameConstants.CurrentLevelConfig);
+                if ((bool)dataObjects[0])
+                {
+                    _gameplayHelper.InitiateGameplay((PreResultData)dataObjects[1]);
+                }
+                else
+                {
+                    _gameplayHelper.InitiateGameplay((int)dataObjects[1], (int)dataObjects[2]);
+                    _gridGenerator.SetGridBg((int)dataObjects[2]);
+                    _gridGenerator.GenerateAllGrid(GameConstants.CurrentLevelConfig);
+                }                
                 break;
 
             case GameStates.RESULT:
+                object[] resultObjects = (object[])data;
+
+                _gameplayHelper.DetermineGameEnd((GameEndType)resultObjects[0], (GameLoseType)resultObjects[1]);
+                _gameplayHelper.Cleanup();
+                break;
+
+            case GameStates.PRESULT:
+                object[] resultDataObjects = (object[])data;
+                _popupHandler.ShowPopup<TimeUpPopup>(true, null, resultDataObjects[0]);
                 break;
         }
     }
@@ -63,6 +88,6 @@ public class GameController : MonoBehaviour, IController
 
     public void Cleanup()
     {
-
+        _audioHandler.Cleanup();
     }
 }

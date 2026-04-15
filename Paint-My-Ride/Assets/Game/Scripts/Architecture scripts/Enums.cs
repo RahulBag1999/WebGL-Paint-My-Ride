@@ -7,6 +7,7 @@ public enum GameStates
     HOME,
     GAMEPLAY,
     RESULT,
+    PRESULT,
     QUIT,
     PAUSE
 }
@@ -77,4 +78,11 @@ public enum GameEndType
     NONE,
     WIN,
     LOSE
+}
+
+public enum AudioType
+{
+    NONE,
+    MUSIC,
+    SFX
 }

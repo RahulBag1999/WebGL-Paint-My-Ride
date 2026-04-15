@@ -18,6 +18,11 @@ public class LevelContainer : EssentialConfigScriptableObject
 
     public override void Init()
     {
-        
+        int count = 1;
+        for (int i = 0; i < levelConfigs.Count; i++)
+        {
+            PlayerDataHandler.Player.GameplayProgress.UpdateTotalLevels(count);
+            count++;
+        }       
     }
 }

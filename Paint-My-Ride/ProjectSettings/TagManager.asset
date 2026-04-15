@@ -57,11 +57,23 @@ TagManager:
   - name: Cat
     uniqueID: 3092834019
     locked: 0
+  - name: HomeBg
+    uniqueID: 3819807623
+    locked: 0
+  - name: Clouds
+    uniqueID: 3318075099
+    locked: 0
+  - name: CatHome
+    uniqueID: 3771654777
+    locked: 0
   - name: UiScreen
     uniqueID: 2061101175
     locked: 0
   - name: UiPopup
     uniqueID: 3826404261
+    locked: 0
+  - name: Transition
+    uniqueID: 144362805
     locked: 0
   m_RenderingLayers:
   - Default

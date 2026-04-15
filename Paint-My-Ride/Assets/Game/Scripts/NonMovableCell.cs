@@ -9,14 +9,15 @@ public class NonMovableCell : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     private ColorCode colorCode;
-    public ColorCode originalColorCode => colorCode;
     private ColorCode appliedColorCode = ColorCode.NONE;
+
     public ColorCode AppliedColorCode => appliedColorCode;
 
     private EssentialConfigData _essentialConfigData;
-    private LevelConfig levelConfig;
-    private GameSettings gameSettings;
-    private ColorData colorData;
+    private LevelConfig _levelConfig;
+    private GameSettings _gameSettings;
+    private ColorData _colorData;
+    private GameplayHelper _gameplayHelper;
 
     private int row;
     private int column;
@@ -24,23 +25,24 @@ public class NonMovableCell : MonoBehaviour
 
     private bool isColoured = false;  
 
-    public void Init(EssentialConfigData essentialConfigData)
+    public void Init(GameplayHelper gameplayHelper, EssentialConfigData essentialConfigData)
     {
         _essentialConfigData = essentialConfigData;
+        _gameplayHelper = gameplayHelper;
 
-        colorData = _essentialConfigData.AccessConfig<ColorData>();
-        gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
+        _colorData = _essentialConfigData.AccessConfig<ColorData>();
+        _gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
 
-        cellIndex.enabled = gameSettings.isDebug;
+        cellIndex.enabled = _gameSettings.isDebug;
     }
 
     public void SetData(LevelConfig config, int id)
     {
-        levelConfig = config;
+        _levelConfig = config;
         index = id;
 
-        row = levelConfig.fullGrid[index].row;
-        column = levelConfig.fullGrid[index].col;
+        row = _levelConfig.fullGrid[index].row;
+        column = _levelConfig.fullGrid[index].col;
 
         gameObject.name = $"NMC {row},{column}";
 
@@ -69,7 +71,14 @@ public class NonMovableCell : MonoBehaviour
     public bool HasCellColored()
     {
         return isColoured;
-    }   
+    }
+
+    public void ResetColor(ColorCode prevColor)
+    {
+        appliedColorCode = prevColor;
+        spriteRenderer.sprite = _colorData.GetColorDatum(prevColor).coloredTile;
+        isColoured = prevColor == ColorCode.NONE ? false : true;        
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -79,8 +88,10 @@ public class NonMovableCell : MonoBehaviour
             {
                 if (appliedColorCode != mCell.ColorCode)
                 {
+                    _gameplayHelper.RecordCellState(this);
+
                     appliedColorCode = mCell.ColorCode;
-                    spriteRenderer.sprite = colorData.GetColorDatum(appliedColorCode).coloredTile;
+                    spriteRenderer.sprite = _colorData.GetColorDatum(appliedColorCode).coloredTile;
 
                     if (!isColoured) isColoured = true;
                 }

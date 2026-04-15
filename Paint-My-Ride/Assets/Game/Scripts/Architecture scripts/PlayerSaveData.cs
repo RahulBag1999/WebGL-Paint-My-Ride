@@ -102,22 +102,34 @@ public sealed class UserSettingsPreferences
 
 public sealed class GameplayProgress
 {
+    [JsonProperty(PropertyName = "TotalLevels")]
+    private int _totalLevels = 0;
+
     [JsonProperty(PropertyName = "MaxUnlockedLevelId")]
     private int _maxUnlockedLevelId = 0;
 
     [JsonIgnore]
     public int MaxUnlockedLevelId => _maxUnlockedLevelId;
 
-    public bool UpdateMaxUnlockedLevelId(int currentLevelId)
+    public void UpdateTotalLevels(int totalLevels)
     {
-        if (currentLevelId <= _maxUnlockedLevelId)
+        _totalLevels = totalLevels;
+    }
+
+    public void UpdateMaxUnlockedLevelId(int currentLevelId)
+    {
+        int nextLevel = currentLevelId + 1;
+
+        if (nextLevel >= _totalLevels)
         {
-            return false;
+            _maxUnlockedLevelId = 0;
         }
         else
         {
-            _maxUnlockedLevelId = currentLevelId;
-            return true;
+            if (nextLevel > _maxUnlockedLevelId)
+            {
+                _maxUnlockedLevelId = nextLevel;
+            }
         }
     }
 }

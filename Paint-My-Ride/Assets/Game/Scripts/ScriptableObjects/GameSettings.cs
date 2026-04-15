@@ -39,15 +39,22 @@ public class GameSettings : EssentialConfigScriptableObject
     [Header("Grid Background")]
     public Vector2 bgPadding = new Vector2(0.5f, 0.5f);
 
-    [Header("Loading Bar Settings")]
+    [Header("Loading Screen Settings")]
     public float uvScrollSpeed = 1f;
     public float loadingTime = 3f;
     public float dotDelay = 0.4f;
     public int maxDots = 3;
+    public float x, y;
+    public float parallaxSpeed = 1f;
 
-    [Header("Pause popup")]
-    public Sprite starMiddle;
-    public Sprite starLR;
+    [Header("Gameplay settings")]
+    public float levelFailContinueTime = 30f;
+    public byte levelFailContinueCoin = 150;
+
+    [Header("Win popup")]
+    public float delayBetweenStars = 0.2f;
+    public Sprite filledStarMid;
+    public Sprite filledStar;
 
     public override void Init()
     {

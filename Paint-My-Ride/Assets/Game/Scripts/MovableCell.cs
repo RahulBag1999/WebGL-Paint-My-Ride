@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -62,13 +60,10 @@ public class MovableCell : MonoBehaviour
 
         gameObject.name = $"MC {row},{col}";
 
-        // 🔥 Decide which cat this is
         cellType = levelConfig.fullGrid[index].cellType;
 
-        // 🔥 Optional: color logic
         colorCode = Utility.GetColorCodeByGridCellType(cellType);
 
-        // 🔥 Load animation data for this cat
         cellData = movableCellData.GetCellData(cellType);
 
         if (cellData == null)
@@ -77,7 +72,6 @@ public class MovableCell : MonoBehaviour
             return;
         }
 
-        // 🔥 Start idle animation
         SetState(AnimationState.Idle);
 
         SetOrientation();
@@ -111,6 +105,9 @@ public class MovableCell : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (_gameplayHelper.IsGamePause)
+            return;
+
         if (!_gameplayHelper.IsGameContinue)
             return;
 
@@ -126,15 +123,13 @@ public class MovableCell : MonoBehaviour
         if (!canMove)
         {
             canMove = true;
-
-            // 🔥 Start walking animation
+            _gameplayHelper.StartUndoRecording(this);
             SetState(AnimationState.Walk);
         }
     }
 
     private void Update()
     {
-        // 🔥 Animation update
         UpdateAnimation();
 
         if (!canMove) return;
@@ -152,7 +147,6 @@ public class MovableCell : MonoBehaviour
             canMove = false;
             hasMovedToDestCell = true;
 
-            // 🔥 Back to idle
             SetState(AnimationState.Idle);
 
             _gameplayHelper.CellMovingStatus(false);
@@ -164,10 +158,6 @@ public class MovableCell : MonoBehaviour
     {
         return !hasMovedToDestCell;
     }
-
-    // =====================================================
-    // 🔥 Animation Logic
-    // =====================================================
 
     private void SetState(AnimationState newState)
     {
@@ -207,16 +197,20 @@ public class MovableCell : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // 🔥 (Optional) View Switcher (for future use)
-    // =====================================================
     public void SetView(ViewDirection view)
     {
         if (currentView == view) return;
 
         currentView = view;
 
-        // Refresh animation with new view
         SetState(currentState);
+    }
+
+    public void ResetMovement()
+    {
+        hasMovedToDestCell = false;
+        canMove = false;
+
+        SetState(AnimationState.Idle);
     }
 }

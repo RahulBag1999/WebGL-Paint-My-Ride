@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class LoadingScreen : UiScreenBase
 {
+    [SerializeField] private RawImage _bg;
     [SerializeField] private RawImage _barImage;
     [SerializeField] private RectTransform _barMaskRectTransform;
     [SerializeField] private TMP_Text _loadingText;
@@ -30,6 +31,8 @@ public class LoadingScreen : UiScreenBase
 
     private void Update()
     {
+        ParallaxBackground();
+
         // UV scrolling
         Rect uvRect = _barImage.uvRect;
         uvRect.x -= _gameSettings.uvScrollSpeed * Time.deltaTime;
@@ -43,6 +46,11 @@ public class LoadingScreen : UiScreenBase
             _dotCount = (_dotCount + 1) % (_gameSettings.maxDots + 1);
             _loadingText.text = _baseText + new string('.', _dotCount);
         }
+    }
+
+    private void ParallaxBackground()
+    {
+        _bg.uvRect = new Rect(_bg.uvRect.position + new Vector2(_gameSettings.x, _gameSettings.y) * _gameSettings.parallaxSpeed * Time.deltaTime, _bg.uvRect.size);
     }
 
     private IEnumerator StartLoader()

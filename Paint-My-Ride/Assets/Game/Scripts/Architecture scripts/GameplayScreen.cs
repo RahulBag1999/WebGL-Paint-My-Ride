@@ -21,6 +21,7 @@ public class GameplayScreen : UiScreenBase
     [SerializeField] private Button undoButton;
 
     private int _gameThemeId;
+    private int _currentLevelId;
     private GameThemeData _gameThemeData;
     private GameThemeData.GameTheme _gameTheme;
 
@@ -31,12 +32,14 @@ public class GameplayScreen : UiScreenBase
         _gameThemeData = _essentialConfigData.AccessConfig<GameThemeData>();
         GameHelper.Instance.StartListening(GameConstants.OnTimerUpdate, UpdateTimer);
         GameHelper.Instance.StartListening(GameConstants.CoinAmountUpdated, UpdateCoins);
+        GameHelper.Instance.StartListening(GameConstants.UndoAvailabilityChanged, UpdateUndoButton);
     }
 
     internal override void Cleanup()
     {
         GameHelper.Instance.StopListening(GameConstants.OnTimerUpdate, UpdateTimer);
         GameHelper.Instance.StopListening(GameConstants.CoinAmountUpdated, UpdateCoins);
+        GameHelper.Instance.StopListening(GameConstants.UndoAvailabilityChanged, UpdateUndoButton);
     }
 
     internal override void HandleGameStateChangeData(object[] data)
@@ -45,14 +48,19 @@ public class GameplayScreen : UiScreenBase
 
         if(dataObjects.Length > 0)
         {
-            levelNoText.text = (((int)dataObjects[0]) + 1).ToString();
-            _gameThemeId = (int)dataObjects[1];
+            if ((bool)dataObjects[0])
+                return;
 
+            _currentLevelId = (int)dataObjects[1];
+            _gameThemeId = (int)dataObjects[2];
+
+            levelNoText.text = (_currentLevelId + 1).ToString();
             _gameTheme = _gameThemeData.GetGameTheme(_gameThemeId);
 
             UpdateGameBoardStyle();
         }
         UpdateCoins(PlayerDataHandler.Player.GameCurrency.Coins);
+        UpdateUndoButton(false);
     }
 
     private void UpdateCoins(object obj)
@@ -68,6 +76,11 @@ public class GameplayScreen : UiScreenBase
         int seconds = totalSeconds % 60;
 
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    private void UpdateUndoButton(object obj)
+    {
+        undoButton.interactable = (bool)obj;
     }
 
     private void UpdateGameBoardStyle()
@@ -92,8 +105,13 @@ public class GameplayScreen : UiScreenBase
         targetText.font = asset;
     }
 
+    public void UndoMove()
+    {
+        GameHelper.Instance.InvokeAction(GameConstants.UndoMovableCell);
+    }
+
     public void Pause()
     {
-        _popupHandler.ShowPopup<PausePopup>(true);
+        _popupHandler.ShowPopup<PausePopup>(true, null, new object[] { _currentLevelId, _gameThemeId});
     }
 }

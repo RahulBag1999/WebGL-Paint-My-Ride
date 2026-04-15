@@ -4,33 +4,45 @@ using UnityEngine;
 using System;
 
 [DisallowMultipleComponent]
-//[RequireComponent(typeof(AnimationPopup))]
+[RequireComponent(typeof(UIAnimator))]
 public abstract class UiPopupBase : MonoBehaviour
 {
     protected PopupHandler _popupHandler;
     protected EssentialConfigData _essentialConfigData;
-    //protected AnimationPopup animationPopup => _animationPopup;
+    protected UIAnimator _uiAnimator;
 
     internal virtual void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData)
     {
         _popupHandler = popupHandler;
         _essentialConfigData = essentialConfigData;
-        //_animationPopup = GetComponent<AnimationPopup>();
+
+        GetUiAnimator();
     }
 
-    internal void SetPopupVisibility(bool isView)
+    private void GetUiAnimator()
     {
-        //Action OnCompleteAction = () => gameObject.SetActive(isView);
+        _uiAnimator = GetComponent<UIAnimator>();
+    }
 
-        //if (isView)
-        //{
-        //    OnCompleteAction();
-        //    _animationPopup.StartTween();
-        //}
-        //else
-        //    _animationPopup.StopTween(OnCompleteAction);
+    internal virtual void Update() { }
 
-        gameObject.SetActive(isView);
+    internal void SetPopupVisibility(bool isView, Action onComplete)
+    {
+        Action OnCompleteAction = () => 
+        {
+            gameObject.SetActive(isView);
+            onComplete?.Invoke();
+        }; 
+
+        if (isView)
+        {
+            OnCompleteAction?.Invoke();
+            _uiAnimator.Play();
+        }
+        else
+        {
+            _uiAnimator.PlayReverse(OnCompleteAction);
+        }
     }
 
     internal abstract void HandlePopupToggleData(bool isView, object[] data);

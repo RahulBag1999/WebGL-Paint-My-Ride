@@ -1,11 +1,27 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
+
+[Serializable]
+public class PreResultData
+{
+    public float remainingTime = 0f;
+}
 
 public class GameplayHelper : MonoBehaviour
 {
+    public class UndoData
+    {
+        public MovableCell movableCell;
+        public Vector3 startPos;
+
+        public List<NonMovableCell> affectedCells = new List<NonMovableCell>();
+        public List<ColorCode> previousColors = new List<ColorCode>();
+    }
+
     private GridGenerator _gridGenerator;
     private PopupHandler _popupHandler;
     private EssentialConfigData _essentialConfigData;
@@ -18,17 +34,21 @@ public class GameplayHelper : MonoBehaviour
     private bool _isGamePause = false;
     public bool IsCellMoving => _isCellMoving;
     public bool IsGameOver => _isGameOver;
+    public bool IsGamePause => _isGamePause;
 
     private GameSettings _gameSettings;
-    private LevelContainer _levelContainer;
     private LevelTimingData _levelTimingData;
+    private LevelContainer _levelContainer;
+    private LevelConfig _levelConfig;
+    private UndoData _lastUndoData;
 
     private int _currentLevel = 0;    
+    private int _currentThemeId = 0;    
     private float _levelTimeRemaining;
 
     private bool _isGameContinue = false;
-    private GameLoseType _gameLoseType = GameLoseType.NONE;
-    private GameEndType _gameEndType = GameEndType.NONE;
+    [SerializeField, ReadOnly] private GameLoseType _gameLoseType = GameLoseType.NONE;
+    [SerializeField, ReadOnly] private GameEndType _gameEndType = GameEndType.NONE;
 
     public bool IsGameContinue => _isGameContinue;
 
@@ -51,16 +71,35 @@ public class GameplayHelper : MonoBehaviour
         UpdateGameplay();
     }
 
-    public void InitiateGameplay(int level)
+    public void InitiateGameplay(int level, int themeId)
     {
         _isGameOver = false;
 
         _currentLevel = level;
+        _currentThemeId = themeId;
         _levelTimeRemaining = _levelTimingData.GetTimeForLevel(_currentLevel);
         _isGameContinue = true;
 
+        _levelConfig = FetchLastLevelConfig(_currentLevel);
+        GameConstants.CurrentLevelConfig = _levelConfig;
+        GameConstants.LevelLoseLifeCount = 1;
+
         GameHelper.Instance.StartListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
         GameHelper.Instance.StartListening(GameConstants.CellColorCompletion, CellColorCompletion);
+        GameHelper.Instance.StartListening(GameConstants.UndoMovableCell, UndoLastMove);
+    }
+
+    public void InitiateGameplay(PreResultData data)
+    {
+        _isGameOver = false;
+        _isGameContinue = true;
+        _gameEndType = GameEndType.NONE;
+        _levelTimeRemaining = data.remainingTime;        
+    }
+
+    private LevelConfig FetchLastLevelConfig(int index)
+    {
+        return _levelContainer.GetLevelConfig(index);
     }
 
     private void UpdateGameplay()
@@ -76,7 +115,7 @@ public class GameplayHelper : MonoBehaviour
             _levelTimeRemaining -= Time.deltaTime;
             GameHelper.Instance.InvokeAction(GameConstants.OnTimerUpdate, (int)_levelTimeRemaining);
         }
-        else
+        else if (_gameEndType != GameEndType.LOSE)
         {
             HandleTimeUp();
         }
@@ -84,27 +123,69 @@ public class GameplayHelper : MonoBehaviour
 
     private void HandleTimeUp()
     {
-        if (_isCellMoving)
+        _isGameContinue = false;
+        _isGameOver = true;
+        _gameEndType = GameEndType.LOSE;
+
+        bool hasAllColored = nmCellList.All(x => x.HasCellColored());
+        bool hasAllMatched = nmCellList.All(x => x.HasColorMatched());
+
+        if (hasAllColored && !hasAllMatched)
         {
-            if (_gameEndType == GameEndType.WIN)
-            {
-                return;
-            }
-            else if (_gameEndType == GameEndType.LOSE)
-            {
-                _gameLoseType = GameLoseType.WRONGPLAY;
-            }
+            _gameLoseType = GameLoseType.WRONGPLAY;
+            GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.RESULT, new object[] { _gameEndType, _gameLoseType } });
         }
         else
         {
             _gameLoseType = GameLoseType.TIMEUP;
-        }
+
+            if (HasEnoughCoinForLevelReplay()) 
+            {
+                InitiatePreGameEnd();
+            }
+            else
+            {
+                InitiateGameEnd();
+            }
+        } 
+    }
+
+    private void InitiateGameEnd()
+    {
         _isGameContinue = false;
-    }    
+        _isGameOver = true;
+
+        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.RESULT, new object[] 
+        {
+            _gameEndType,
+            _gameLoseType
+        } });
+    }
+
+    private void InitiatePreGameEnd()
+    {
+        if(GameConstants.LevelLoseLifeCount == 0)
+        {
+            InitiateGameEnd();
+        }
+        else
+        {
+            GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.PRESULT, new object[] 
+            {
+                new PreResultData
+                {
+                    remainingTime = _gameSettings.levelFailContinueTime
+                }
+            } });
+            GameConstants.LevelLoseLifeCount = 0;
+        }            
+    }
 
     public void CellMovingStatus(bool isMove)
     {
         _isCellMoving = isMove;
+
+        GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, CanUndo());
     }
 
     public void AddNmCellsToList(NonMovableCell nmCell)
@@ -129,20 +210,23 @@ public class GameplayHelper : MonoBehaviour
             {
                 //win
                 _gameEndType = GameEndType.WIN;
-                StartCoroutine(DelayGameEnd(true));
+                _gameLoseType = GameLoseType.NONE;
+
+                InitiateGameEnd();
             }
             else
             {
                 if (!hasRemainingMovableCell)
                 {
                     _gameEndType = GameEndType.LOSE;
-                    StartCoroutine(DelayGameEnd(false));
+                    _gameLoseType = GameLoseType.WRONGPLAY;
+
+                    InitiateGameEnd();
                 }
                 else
                 {
                     //game not end yet
                 }
-
             }
         }
         else
@@ -150,6 +234,73 @@ public class GameplayHelper : MonoBehaviour
             //level not completed yet. Still cells left to color
             return;
         }
+    }
+
+    private bool HasEnoughCoinForLevelReplay()
+    {
+        return PlayerDataHandler.Player.GameCurrency.Coins >= _gameSettings.levelFailContinueCoin;
+    }
+
+    public void DetermineGameEnd(GameEndType gameEndType, GameLoseType gameLoseType)
+    {
+        if(gameEndType == GameEndType.WIN)
+        {
+            StartCoroutine(DelayGameEnd(true));
+        }
+        else if(gameEndType == GameEndType.LOSE)
+        {
+            StartCoroutine(DelayGameEnd(false));
+        }
+    }
+
+    public void StartUndoRecording(MovableCell cell)
+    {
+        _lastUndoData = new UndoData();
+        _lastUndoData.movableCell = cell;
+        _lastUndoData.startPos = cell.transform.position;
+
+        GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, true);
+    }
+
+    public void RecordCellState(NonMovableCell cell)
+    {
+        if (_lastUndoData == null) return;
+
+        // Avoid duplicate entries
+        if (_lastUndoData.affectedCells.Contains(cell))
+            return;
+
+        _lastUndoData.affectedCells.Add(cell);
+        _lastUndoData.previousColors.Add(cell.AppliedColorCode);
+    }
+
+    private void UndoLastMove(object obj)
+    {
+        if (_lastUndoData == null) return;
+
+        //Move cat back
+        MovableCell cell = _lastUndoData.movableCell;
+        cell.transform.position = _lastUndoData.startPos;
+
+        // Reset movement state
+        cell.ResetMovement();
+
+        //Restore tiles
+        for (int i = 0; i < _lastUndoData.affectedCells.Count; i++)
+        {
+            NonMovableCell nmCell = _lastUndoData.affectedCells[i];
+            ColorCode prevColor = _lastUndoData.previousColors[i];
+
+            nmCell.ResetColor(prevColor);
+        }
+
+        _lastUndoData = null;
+        GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, false);
+    }
+
+    public bool CanUndo()
+    {
+        return _lastUndoData != null && !_isCellMoving;
     }
 
     private void HandleGameplayPauseStatus(object obj)
@@ -179,20 +330,13 @@ public class GameplayHelper : MonoBehaviour
         yield return new WaitForSeconds(hasWon ? _gameSettings.gameWinDelay : _gameSettings.gameLoseDelay);
         if (hasWon)
         {
-            _popupHandler.ShowPopup<WinPopup>(true);
+            _popupHandler.ShowPopup<WinPopup>(true, null, new object[] { _currentLevel, _currentThemeId, _levelTimeRemaining });
         }
         else
         {
-            _popupHandler.ShowPopup<LosePopup>(true);
+            _popupHandler.ShowPopup<LosePopup>(true, null, new object[] { _currentLevel, _currentThemeId});
         }
     }    
-
-    private void IncrementLevel()
-    {
-        //PlayerPrefs.SetInt(GameConstants.LEVEL_ID, (currentLevel += 1));
-        //currentLevel = PlayerPrefs.GetInt(GameConstants.LEVEL_ID, 1);
-        //GameConstants.CURRENT_LEVEL_CONFIG = GetLevelConfig(currentLevel);
-    }
 
     public void Cleanup()
     {
@@ -204,8 +348,10 @@ public class GameplayHelper : MonoBehaviour
         _isGamePause = false;
 
         _gameEndType = GameEndType.NONE;
+        _gameLoseType = GameLoseType.NONE;
 
         GameHelper.Instance.StopListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
         GameHelper.Instance.StopListening(GameConstants.CellColorCompletion, CellColorCompletion);
+        GameHelper.Instance.StopListening(GameConstants.UndoMovableCell, UndoLastMove);
     }
 }
