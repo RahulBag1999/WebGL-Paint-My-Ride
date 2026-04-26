@@ -15,6 +15,7 @@ public class MovableCell : MonoBehaviour
 
     private GridCellType cellType = GridCellType.NONE;
 
+    private bool canInteract = true;
     private bool canMove = false;
     private bool hasMovedToDestCell = false;
 
@@ -105,6 +106,9 @@ public class MovableCell : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!canInteract)
+            return;
+
         if (_gameplayHelper.IsGamePause)
             return;
 
@@ -206,11 +210,21 @@ public class MovableCell : MonoBehaviour
         SetState(currentState);
     }
 
+    public void SetInteractibility(bool isInteractible)
+    {
+        canInteract = isInteractible;
+    }
+
     public void ResetMovement()
     {
         hasMovedToDestCell = false;
         canMove = false;
 
         SetState(AnimationState.Idle);
+    }
+
+    public int GetIndex()
+    {
+        return index;
     }
 }

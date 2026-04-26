@@ -1,5 +1,7 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HomeScreen : UiScreenBase
 {
@@ -7,6 +9,8 @@ public class HomeScreen : UiScreenBase
     [SerializeField] private TMP_Text _coinText;
 
     [SerializeField] private Canvas _homeBgCanvas;
+    [SerializeField] private Button _playButton;
+    [SerializeField] private MultiSpriteAnimator _msa;
 
     private GameThemeData _gameThemeData;
 
@@ -35,6 +39,9 @@ public class HomeScreen : UiScreenBase
 
         SetGameTheme();
         UpdateHomeBgCanvas(true);
+
+        _msa.Play("HomeCatLeft", "Idle");
+        _msa.Play("HomeCatRight", "Idle");
     }
 
     private void UpdateHomeBgCanvas(bool isEnabled)
@@ -44,8 +51,34 @@ public class HomeScreen : UiScreenBase
 
     public void PlayGame()
     {
-        UpdateHomeBgCanvas(false);
-        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[] {false, _currentLevel, _currentThemeId } });
+        Action changeGameStateAction = () =>
+        {
+            GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
+            {
+                false,
+                _currentLevel,
+                _currentThemeId
+            } });
+        };
+
+        ScreenTransition.Instance.Play(
+            OnStarted => 
+            {
+                _playButton.interactable = false;
+            }, 
+            OnPartial =>
+            {
+                UpdateHomeBgCanvas(false);
+                changeGameStateAction?.Invoke();
+            },
+            OnCompleted =>
+            {
+                _msa.Stop("HomeCatLeft");
+                _msa.Stop("HomeCatRight");
+
+                _playButton.interactable = true;
+            }
+        );            
     }
 
     private void UpdateCoins(object obj)

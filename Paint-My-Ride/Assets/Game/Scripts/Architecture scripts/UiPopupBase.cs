@@ -48,4 +48,9 @@ public abstract class UiPopupBase : MonoBehaviour
     internal abstract void HandlePopupToggleData(bool isView, object[] data);
 
     internal abstract void Cleanup();
+
+    public void PlayClickAudio()
+    {
+        GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Click");
+    }
 }

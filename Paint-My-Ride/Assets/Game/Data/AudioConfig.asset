@@ -12,4 +12,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02cac0503e4eae945a35f4e1f6d17a6b, type: 3}
   m_Name: AudioConfig
   m_EditorClassIdentifier: Assembly-CSharp::AudioConfig
-  _audioList: []
+  _audioList:
+  - name: Background
+    clip: {fileID: 8300000, guid: 38bec0b698b37e0438197a727816dc8a, type: 3}
+    audioType: 1
+    volume: 1
+    pitch: 1
+    loop: 1
+    playOnAwake: 0
+  - name: Win
+    clip: {fileID: 8300000, guid: bc425c0cb025e614f9de0b372f11f45e, type: 3}
+    audioType: 1
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - name: Lose
+    clip: {fileID: 8300000, guid: c0d1f40f80bd46f43a4758783d539d3f, type: 3}
+    audioType: 1
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - name: Click
+    clip: {fileID: 8300000, guid: 4e783fbc512f88e40914d819952ca6f1, type: 3}
+    audioType: 2
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - name: Meow1
+    clip: {fileID: 8300000, guid: 9c82ea52da685304391546517e63a772, type: 3}
+    audioType: 2
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - name: Meow2
+    clip: {fileID: 8300000, guid: 854ab6112f793f64aaa60448cdd19899, type: 3}
+    audioType: 2
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - name: Meow3
+    clip: {fileID: 8300000, guid: 6ad560070d5f1aa42983cd4d4b535d3d, type: 3}
+    audioType: 2
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+  - name: Meow4
+    clip: {fileID: 8300000, guid: 2fd9fbfeaea8cea4d942df9df2da1c4f, type: 3}
+    audioType: 2
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0

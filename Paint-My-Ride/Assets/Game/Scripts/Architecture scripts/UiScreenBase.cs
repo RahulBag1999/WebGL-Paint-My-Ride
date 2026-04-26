@@ -34,4 +34,9 @@ public abstract class UiScreenBase : MonoBehaviour
     internal abstract void HandleGameStateChangeData(object[] data);
 
     internal abstract void Cleanup();
+
+    public void PlayClickAudio()
+    {
+        GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Click");
+    }
 }

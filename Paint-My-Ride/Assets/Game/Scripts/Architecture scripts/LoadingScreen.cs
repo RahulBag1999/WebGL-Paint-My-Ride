@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,14 +9,14 @@ public class LoadingScreen : UiScreenBase
     [SerializeField] private RawImage _barImage;
     [SerializeField] private RectTransform _barMaskRectTransform;
     [SerializeField] private TMP_Text _loadingText;
+    [SerializeField] private MultiSpriteAnimator _animator;
 
     private bool _canCountdown = true;
     private float _barMaskWidth;
     private float _count = 0;
 
     private float _dotTimer = 0f;
-    private int _dotCount = 0;
-    private string _baseText = "Loading";
+    private int _dotCount = 0;    
 
     private GameSettings _gameSettings;    
 
@@ -44,7 +43,7 @@ public class LoadingScreen : UiScreenBase
         {
             _dotTimer = 0f;
             _dotCount = (_dotCount + 1) % (_gameSettings.maxDots + 1);
-            _loadingText.text = _baseText + new string('.', _dotCount);
+            _loadingText.text = GameConstants.BASE_LOADING_TEXT + new string('.', _dotCount);
         }
     }
 
@@ -80,13 +79,14 @@ public class LoadingScreen : UiScreenBase
         finalSize.x = _barMaskWidth;
         _barMaskRectTransform.sizeDelta = finalSize;
 
-        yield return new WaitForSeconds(0.5f);
         GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, new object[] { false } });
+        _animator.Stop("CatMiddle");
     }    
 
     internal override void HandleGameStateChangeData(object[] data)
     {
         StartCoroutine(StartLoader());
+        _animator.Play("CatMiddle", "Walk");
     }
 
     internal override void Cleanup()

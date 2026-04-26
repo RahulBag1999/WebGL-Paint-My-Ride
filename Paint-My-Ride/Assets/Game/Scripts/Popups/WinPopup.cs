@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class WinPopup : UiPopupBase
     [SerializeField] private Image _starL;
     [SerializeField] private Image _starMiddle;
     [SerializeField] private Image _starR;
+
+    [SerializeField] private TMP_Text _coinText;
 
     private GameSettings _gameSettings;
     private GameThemeData _gameThemeData;
@@ -38,11 +41,14 @@ public class WinPopup : UiPopupBase
     {
         if (isView) 
         {
-            if(data.Length > 0)
+            ResetStars();
+            if (data.Length > 0)
             {
                 _currentLevel = (int)data[0];
                 _currentTheme = (int)data[1];
                 _remainedTime = (float)data[2];
+
+                _coinText.text = _gameSettings.coins.ToString();
 
                 SetGameTheme();
                 IncrementLevel();
@@ -50,7 +56,8 @@ public class WinPopup : UiPopupBase
                 Debug.Log($"Stars :: {GetStars(_remainedTime / 100f)}");
 
                 PlayStarAnimation(GetStars(_remainedTime / 100f));
-            }  
+            }
+            GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Win");
         }
         else
         {
@@ -141,7 +148,7 @@ public class WinPopup : UiPopupBase
 
     public void NextLevel()
     {
-        Action OnComplete = () =>
+        Action OnChangeGameState = () =>
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
             {
@@ -150,15 +157,54 @@ public class WinPopup : UiPopupBase
                 _currentTheme
             } });
         };
-        _popupHandler.HidePopup(OnComplete);
+        _popupHandler.HidePopup(() => { }, () => 
+        {
+            ScreenTransition.Instance.Play(
+                OnStarted => 
+                {
+
+                }, 
+                OnPartial => 
+                {
+                    OnChangeGameState?.Invoke();
+                }, 
+                OnCompleted => 
+                {
+
+                }
+            );
+        });
     }
 
     public void Home()
     {
-        Action OnComplete = () => 
+        Action OnChangeGameState = () => 
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
-        _popupHandler.HidePopup(OnComplete);        
+
+        _popupHandler.HidePopup(() => { }, () =>
+        {
+            ScreenTransition.Instance.Play(
+                OnStarted =>
+                {
+
+                },
+                OnPartial =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                OnCompleted =>
+                {
+
+                }
+            );
+        });       
+    }
+
+    private void ResetStars()
+    {
+        _starL.sprite = _starR.sprite = _gameSettings.emptyStar;
+        _starMiddle.sprite = _gameSettings.emptyStarMid;
     }
 }

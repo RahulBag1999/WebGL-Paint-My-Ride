@@ -27,29 +27,53 @@ public class LosePopup : UiPopupBase
                 _currentLevel = (int)data[0];
                 _currentTheme = (int)data[1];
             }
+            GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Lose");
         }
     }
 
     public void TryAgain()
     {
-        _popupHandler.HidePopup();
-        SetGameTheme();
-
-        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
+        Action OnChangeGameState = () => 
         {
-            false,
-            _currentLevel,
-            _currentTheme
-        } });
+            GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
+            {
+                false,
+                _currentLevel,
+                _currentTheme
+            }});
+        };
+
+        SetGameTheme();
+        _popupHandler.HidePopup(() => { }, () => 
+        {
+            ScreenTransition.Instance.Play(
+                OnStarted => { }, 
+                OnPartial => 
+                {
+                    OnChangeGameState?.Invoke();
+                }, 
+                OnCompleted => { }
+            );
+        });        
     }
 
     public void Home()
     {
-        Action OnComplete = () =>
+        Action OnChangeGameState = () =>
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
-        _popupHandler.HidePopup(OnComplete);
+        _popupHandler.HidePopup(() => { }, () => 
+        {
+            ScreenTransition.Instance.Play(
+                OnStarted => { }, 
+                OnPartial => 
+                {
+                    OnChangeGameState?.Invoke();
+                }, 
+                OnCompleted => { }
+            );
+        });
     }
 
     private void SetGameTheme()

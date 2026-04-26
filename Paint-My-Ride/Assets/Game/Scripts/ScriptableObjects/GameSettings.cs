@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,6 +55,24 @@ public class GameSettings : EssentialConfigScriptableObject
     public float delayBetweenStars = 0.2f;
     public Sprite filledStarMid;
     public Sprite filledStar;
+    public int coins;
+
+    public Sprite emptyStarMid;
+    public Sprite emptyStar;
+
+    [Header("Hand pointer")]
+    public HandPointer handPointer;
+
+    [Header("Tutorial")]
+    public List<TutorialData> tutorialDataList = new List<TutorialData>();
+    public HandPointer handPointerPrefab;
+
+    [Serializable]
+    public class TutorialData
+    {
+        public int cellIndex;
+        public Vector3 handPos;
+    }
 
     public override void Init()
     {

@@ -81,7 +81,7 @@ public class PausePopup : UiPopupBase
 
     public void Restart()
     {
-        Action OnComplete = () => 
+        Action OnChangeGameState = () => 
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
             {
@@ -91,8 +91,28 @@ public class PausePopup : UiPopupBase
             } });
         };
 
-        SetGameTheme();        
-        _popupHandler.HidePopup(OnComplete);
+        SetGameTheme();
+        _popupHandler.HidePopup(() => 
+        {
+            GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
+        }, 
+        () => 
+        {
+            ScreenTransition.Instance.Play(
+                OnStarted =>
+                {
+                    GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
+                },
+                OnPartial =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                OnComplete =>
+                {
+                    GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, false);
+                }
+            );
+        });        
     }
 
     private void SetGameTheme()
@@ -102,11 +122,32 @@ public class PausePopup : UiPopupBase
 
     public void Home()
     {
-        Action OnComplete = () => 
+        Action OnChangeGameState = () => 
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
-        _popupHandler.HidePopup(OnComplete);        
+        _popupHandler.HidePopup(
+            () =>
+            {
+                GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
+            },
+            () =>
+            {
+                ScreenTransition.Instance.Play(
+                    OnStarted => 
+                    {
+
+                    },
+                    OnPartial => 
+                    {
+                        OnChangeGameState?.Invoke();
+                    },
+                    OnCompleted => 
+                    {
+
+                    }
+                );
+            });
     }
 
     public void MusicToggle(bool state)

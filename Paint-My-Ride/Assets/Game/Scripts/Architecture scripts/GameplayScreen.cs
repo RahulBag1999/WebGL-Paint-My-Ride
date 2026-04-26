@@ -113,5 +113,5 @@ public class GameplayScreen : UiScreenBase
     public void Pause()
     {
         _popupHandler.ShowPopup<PausePopup>(true, null, new object[] { _currentLevelId, _gameThemeId});
-    }
+    }    
 }

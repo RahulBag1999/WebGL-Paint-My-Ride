@@ -34,8 +34,9 @@ public class PopupHandler : MonoBehaviour
         _currentActivePopups.Peek().HandlePopupToggleData(true, data);
     }
 
-    internal void HidePopup(Action OnComplete = null)
+    internal void HidePopup(Action OnStarted = null, Action OnComplete = null)
     {
+        OnStarted?.Invoke();
         _currentActivePopups?.Peek().SetPopupVisibility(false, OnComplete);
         _currentActivePopups?.Peek().HandlePopupToggleData(false, null);
         _currentActivePopups?.Pop();

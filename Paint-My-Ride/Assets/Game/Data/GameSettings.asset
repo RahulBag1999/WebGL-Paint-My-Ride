@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b42da71de94dd429f403e692f28acd, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  gameName: Paint My Ride
+  gameName: Cat Walk
   isDebug: 0
   cellMoveSpeed: 5
   gameWinDelay: 0.5
@@ -35,10 +35,17 @@ MonoBehaviour:
   x: -0.01
   y: -0.01
   parallaxSpeed: 2
-  starMiddle: {fileID: 21300000, guid: 61a13680c2431d145b831072f1fbe94b, type: 3}
-  starLR: {fileID: 21300000, guid: c211a86f2131843419c6c63756d7d10e, type: 3}
   levelFailContinueTime: 30
   levelFailContinueCoin: 150
   delayBetweenStars: 0.2
   filledStarMid: {fileID: 21300000, guid: 61a13680c2431d145b831072f1fbe94b, type: 3}
   filledStar: {fileID: 21300000, guid: c211a86f2131843419c6c63756d7d10e, type: 3}
+  emptyStarMid: {fileID: 21300000, guid: e9efab7ddfc259f4a893b0068d13c0ce, type: 3}
+  emptyStar: {fileID: 21300000, guid: bcea4a54f2c412e46b1ced87427a928e, type: 3}
+  handPointer: {fileID: 3577337031204279948, guid: 06cfd8813d58a34419bf4cd0d715a179, type: 3}
+  tutorialDataList:
+  - cellIndex: 4
+    handPos: {x: -4.38, y: 0, z: 0}
+  - cellIndex: 8
+    handPos: {x: -4.38, y: -1.96, z: 0}
+  handPointerPrefab: {fileID: 3577337031204279948, guid: 06cfd8813d58a34419bf4cd0d715a179, type: 3}

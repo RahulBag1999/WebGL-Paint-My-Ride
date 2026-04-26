@@ -52,13 +52,20 @@ public class AudioManager : MonoBehaviour
 
         GameHelper.Instance.StartListening(GameConstants.PlayAudio, Play);
         GameHelper.Instance.StartListening(GameConstants.StopAudio, Stop);
+        GameHelper.Instance.StartListening(GameConstants.PlayAudioOneShot, PlayOneShot);
     }
 
     public void Play(object sound)
     {
+        Debug.Log("play audio");
         AudioDatum s = Array.Find(audioSourceDatas.ToArray(), item => item.name == (string)sound);
         if (!s.source.isPlaying)
+        {
             s.source.Play();
+            Debug.Log("playing audio");
+            Debug.Log($"{s.name}");
+        }
+            
     }
     internal void PlayOneShot(object sound)
     {
@@ -80,6 +87,7 @@ public class AudioManager : MonoBehaviour
     {
         GameHelper.Instance.StopListening(GameConstants.PlayAudio, Play);
         GameHelper.Instance.StopListening(GameConstants.StopAudio, Stop);
+        GameHelper.Instance.StopListening(GameConstants.PlayAudioOneShot, PlayOneShot);
     }
 
     [Serializable]

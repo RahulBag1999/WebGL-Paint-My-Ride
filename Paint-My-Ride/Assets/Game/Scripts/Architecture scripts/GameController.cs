@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour, IController
@@ -23,7 +21,7 @@ public class GameController : MonoBehaviour, IController
 
         _audioHandler.Init(_essentialConfigData);
         _gridGenerator.Init(_gameplayHelper, _essentialConfigData);
-        _gameplayHelper.Init(_popupHandler, _gridGenerator, _essentialConfigData);
+        _gameplayHelper.Init(_popupHandler, _essentialConfigData);
     }
 
     public void ChangeGameState(GameStates newGameState, object data = null)
@@ -39,6 +37,8 @@ public class GameController : MonoBehaviour, IController
             case GameStates.HOME:
                 _audioHandler.HandleMusicState(PlayerDataHandler.Player.UserSettingsPreferences.MusicState);
                 _audioHandler.HandleSfxState(PlayerDataHandler.Player.UserSettingsPreferences.SfxState);
+
+                GameHelper.Instance.InvokeAction(GameConstants.PlayAudio, "Background");
 
                 _gridGenerator.Cleanup();
                 _gameplayHelper.Cleanup();
@@ -56,6 +56,7 @@ public class GameController : MonoBehaviour, IController
                 }
                 else
                 {
+                    _gameplayHelper.Cleanup();
                     _gameplayHelper.InitiateGameplay((int)dataObjects[1], (int)dataObjects[2]);
                     _gridGenerator.SetGridBg((int)dataObjects[2]);
                     _gridGenerator.GenerateAllGrid(GameConstants.CurrentLevelConfig);

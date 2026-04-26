@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GridGenerator : MonoBehaviour
 {
-    public GridLayoutGroup uiGridLayout;
-    public RectTransform uiBgRect;
-    public SpriteRenderer gridBG;
-    public Vector2 uiBgPadding = new Vector2(20f, 20f);
+    [SerializeField] private GridLayoutGroup uiGridLayout;
+    [SerializeField] private RectTransform uiBgRect;
+    [SerializeField] private SpriteRenderer gridBG;
+    [SerializeField] private Vector2 uiBgPadding = new Vector2(20f, 20f);
+    [SerializeField] private RectTransform targetTextRect;
+    [SerializeField] private float targetOffsetY = 30f; 
 
     private GameSettings _gameSettings;
     private GameThemeData _gameThemeData;
@@ -194,27 +194,39 @@ public class GridGenerator : MonoBehaviour
 
         uiGridLayout.constraintCount = cols - 2;
 
-        // 🔑 Get cell size + spacing
+        // Get cell size + spacing
         Vector2 cellSize = uiGridLayout.cellSize;
         Vector2 spacing = uiGridLayout.spacing;
 
         int activeCols = cols - 2;
         int activeRows = rows - 2;
 
-        // 🔑 Calculate grid size
+        // Calculate grid size
         float gridWidth = (activeCols * cellSize.x) + ((activeCols - 1) * spacing.x);
         float gridHeight = (activeRows * cellSize.y) + ((activeRows - 1) * spacing.y);
 
-        // 🔥 Resize background
+        // Resize background
         if (uiBgRect != null)
         {
             uiBgRect.sizeDelta = new Vector2(
                 gridWidth + uiBgPadding.x * 2f,
                 gridHeight + uiBgPadding.y * 2f
             );
+
+            if (targetTextRect != null)
+            {
+                float bgHeight = uiBgRect.sizeDelta.y;
+
+                targetTextRect.anchoredPosition = new Vector2(
+                    targetTextRect.anchoredPosition.x,
+                    (bgHeight / 2f) + targetOffsetY
+                );
+
+                targetTextRect.anchoredPosition = new Vector2(0f, (bgHeight / 2f) + targetOffsetY);
+            }
         }
 
-        // 🔥 Generate cells
+        // Generate cells
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
@@ -237,19 +249,19 @@ public class GridGenerator : MonoBehaviour
             }
         }
 
-        // 🔑 Force layout rebuild (IMPORTANT)
+        // Force layout rebuild (IMPORTANT)
         LayoutRebuilder.ForceRebuildLayoutImmediate(uiGridLayout.GetComponent<RectTransform>());
     }
 
     /// <summary>
-    /// 🔑 UPDATED FOR 2D (XY PLANE)
+    /// UPDATED FOR 2D (XY PLANE)
     /// </summary>
     private Vector3 GetCellWorldPos(Vector3 origin, int r, int c, float stepX, float stepY)
     {
         return origin + new Vector3(
             c * stepX,
-            -r * stepY,   // 🔑 rows go downward
-            0f            // 🔑 no Z movement
+            -r * stepY,   //  rows go downward
+            0f            //  no Z movement
         );
     }
 

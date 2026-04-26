@@ -1,4 +1,4 @@
-using UnityEngine;
+using System;
 
 public class TimeUpPopup : UiPopupBase
 {
@@ -26,10 +26,20 @@ public class TimeUpPopup : UiPopupBase
 
     public void KeepPlaying()
     {
-        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[] {true, _preResultData } });
-        _popupHandler.HidePopup();
+        Action OnChangeGameState = () => 
+        {
+            GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[] 
+            {
+                true, 
+                _preResultData 
+            } });
+        };
+        
+        _popupHandler.HidePopup(() => { }, () => 
+        {
+            OnChangeGameState?.Invoke();
+        });
 
-        //deduct coins
         PlayerDataHandler.Player.GameCurrency.UpdateCoin(-_gameSettings.levelFailContinueCoin);
     }
 }
