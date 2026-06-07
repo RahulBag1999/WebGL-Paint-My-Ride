@@ -40,8 +40,7 @@ public class HomeScreen : UiScreenBase
         SetGameTheme();
         UpdateHomeBgCanvas(true);
 
-        _msa.Play("HomeCatLeft", "Idle");
-        _msa.Play("HomeCatRight", "Idle");
+        _msa.Play("HomeCat", "Idle");
     }
 
     private void UpdateHomeBgCanvas(bool isEnabled)
@@ -59,26 +58,23 @@ public class HomeScreen : UiScreenBase
                 _currentLevel,
                 _currentThemeId
             } });
-        };
+        };     
 
-        ScreenTransition.Instance.Play(
-            OnStarted => 
+        TransitionHelper.Instance.Play(
+            () => 
             {
                 _playButton.interactable = false;
             }, 
-            OnPartial =>
+            () => 
             {
                 UpdateHomeBgCanvas(false);
                 changeGameStateAction?.Invoke();
-            },
-            OnCompleted =>
+            }, 
+            () => 
             {
-                _msa.Stop("HomeCatLeft");
-                _msa.Stop("HomeCatRight");
-
+                _msa.Stop("HomeCat");
                 _playButton.interactable = true;
-            }
-        );            
+            });
     }
 
     private void UpdateCoins(object obj)

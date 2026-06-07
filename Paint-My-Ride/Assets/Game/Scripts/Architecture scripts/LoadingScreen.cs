@@ -6,26 +6,37 @@ using UnityEngine.UI;
 public class LoadingScreen : UiScreenBase
 {
     [SerializeField] private RawImage _bg;
+
+    [Header("Loader")]
     [SerializeField] private RawImage _barImage;
-    [SerializeField] private RectTransform _barMaskRectTransform;
+
+    [Header("Text")]
     [SerializeField] private TMP_Text _loadingText;
+
+    [Header("Animation")]
     [SerializeField] private MultiSpriteAnimator _animator;
 
+    [Header("Filler Movement")]
+    [SerializeField] private float _startX = -783f;
+    [SerializeField] private float _endX = 0f;
+
     private bool _canCountdown = true;
-    private float _barMaskWidth;
     private float _count = 0;
 
     private float _dotTimer = 0f;
-    private int _dotCount = 0;    
+    private int _dotCount = 0;
 
-    private GameSettings _gameSettings;    
+    private GameSettings _gameSettings;
+
+    private RectTransform _barImageRect;
 
     internal override void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData)
     {
         base.Init(popupHandler, essentialConfigData);
+
         _gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
 
-        _barMaskWidth = _barMaskRectTransform.sizeDelta.x;
+        _barImageRect = _barImage.rectTransform;
     }
 
     private void Update()
@@ -37,19 +48,29 @@ public class LoadingScreen : UiScreenBase
         uvRect.x -= _gameSettings.uvScrollSpeed * Time.deltaTime;
         _barImage.uvRect = uvRect;
 
-        // Dot animation
+        // Loading dots animation
         _dotTimer += Time.deltaTime;
+
         if (_dotTimer >= _gameSettings.dotDelay)
         {
             _dotTimer = 0f;
+
             _dotCount = (_dotCount + 1) % (_gameSettings.maxDots + 1);
-            _loadingText.text = GameConstants.BASE_LOADING_TEXT + new string('.', _dotCount);
+
+            _loadingText.text =
+                GameConstants.BASE_LOADING_TEXT +
+                new string('.', _dotCount);
         }
     }
 
     private void ParallaxBackground()
     {
-        _bg.uvRect = new Rect(_bg.uvRect.position + new Vector2(_gameSettings.x, _gameSettings.y) * _gameSettings.parallaxSpeed * Time.deltaTime, _bg.uvRect.size);
+        _bg.uvRect = new Rect(
+            _bg.uvRect.position +
+            new Vector2(_gameSettings.x, _gameSettings.y) *
+            _gameSettings.parallaxSpeed *
+            Time.deltaTime,
+            _bg.uvRect.size);
     }
 
     private IEnumerator StartLoader()
@@ -65,32 +86,43 @@ public class LoadingScreen : UiScreenBase
 
             float progress = Mathf.Clamp01(_count / _gameSettings.loadingTime);
 
-            Vector2 barMaskSizeDelta = _barMaskRectTransform.sizeDelta;
-            barMaskSizeDelta.x = progress * _barMaskWidth;
-            _barMaskRectTransform.sizeDelta = barMaskSizeDelta;
+            // Move filler image from left to right
+            Vector2 pos = _barImageRect.anchoredPosition;
+            pos.x = Mathf.Lerp(_startX, _endX, progress);
+            _barImageRect.anchoredPosition = pos;
 
             if (progress >= 1f)
             {
                 _canCountdown = false;
             }
         }
-        
-        Vector2 finalSize = _barMaskRectTransform.sizeDelta;
-        finalSize.x = _barMaskWidth;
-        _barMaskRectTransform.sizeDelta = finalSize;
 
-        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, new object[] { false } });
-        _animator.Stop("CatMiddle");
-    }    
+        // Ensure final position
+        Vector2 finalPos = _barImageRect.anchoredPosition;
+        finalPos.x = _endX;
+        _barImageRect.anchoredPosition = finalPos;
+
+        GameHelper.Instance.InvokeAction(
+            GameConstants.ChangeGameState,
+            new object[] { GameStates.HOME, new object[] { false } });
+
+        _animator.Stop("LoadingScreenCat");
+    }
 
     internal override void HandleGameStateChangeData(object[] data)
     {
+        // Set initial position BEFORE animation starts
+        Vector2 pos = _barImageRect.anchoredPosition;
+        pos.x = _startX;
+        _barImageRect.anchoredPosition = pos;
+
         StartCoroutine(StartLoader());
-        _animator.Play("CatMiddle", "Walk");
+
+        _animator.Play("LoadingScreenCat", "Walk");
     }
 
     internal override void Cleanup()
     {
-        
+
     }
 }

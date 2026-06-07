@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour, IController
     [SerializeField] private GameplayHelper _gameplayHelper;
     [SerializeField] private GridGenerator _gridGenerator;
     [SerializeField] private AudioHandler _audioHandler;
+    [SerializeField] private TutorialHelper _tutorialHelper;
     [SerializeField] private CloudManager _cloudManager;
 
     private PopupHandler _popupHandler;
@@ -19,9 +20,10 @@ public class GameController : MonoBehaviour, IController
         _essentialConfigData = essentialConfigData;
         _stateChanged = stateChanged;
 
+        _tutorialHelper.Init(_essentialConfigData);
         _audioHandler.Init(_essentialConfigData);
         _gridGenerator.Init(_gameplayHelper, _essentialConfigData);
-        _gameplayHelper.Init(_popupHandler, _essentialConfigData);
+        _gameplayHelper.Init(_popupHandler, _essentialConfigData, _tutorialHelper);
     }
 
     public void ChangeGameState(GameStates newGameState, object data = null)
@@ -40,8 +42,8 @@ public class GameController : MonoBehaviour, IController
 
                 GameHelper.Instance.InvokeAction(GameConstants.PlayAudio, "Background");
 
-                _gridGenerator.Cleanup();
                 _gameplayHelper.Cleanup();
+                _gridGenerator.Cleanup();
 
                 _cloudManager.UpdateView(true);
                 break;
@@ -57,6 +59,7 @@ public class GameController : MonoBehaviour, IController
                 else
                 {
                     _gameplayHelper.Cleanup();
+                    _gridGenerator.Cleanup();
                     _gameplayHelper.InitiateGameplay((int)dataObjects[1], (int)dataObjects[2]);
                     _gridGenerator.SetGridBg((int)dataObjects[2]);
                     _gridGenerator.GenerateAllGrid(GameConstants.CurrentLevelConfig);

@@ -129,6 +129,8 @@ public class MovableCell : MonoBehaviour
             canMove = true;
             _gameplayHelper.StartUndoRecording(this);
             SetState(AnimationState.Walk);
+
+            GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Meow1");
         }
     }
 

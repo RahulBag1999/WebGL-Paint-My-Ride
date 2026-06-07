@@ -70,7 +70,6 @@ public class GameSettings : EssentialConfigScriptableObject
     [Serializable]
     public class TutorialData
     {
-        public int cellIndex;
         public Vector3 handPos;
     }
 

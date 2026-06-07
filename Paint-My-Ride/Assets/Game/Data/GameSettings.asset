@@ -20,7 +20,7 @@ MonoBehaviour:
   mCellPrefab: {fileID: -6498618674742936142, guid: 6319a03c6aea09d4f96f788d500b24eb, type: 3}
   nmCellPrefab: {fileID: 7172879906508089889, guid: 7946e8ac52c3f574eb39c40f7999b495, type: 3}
   mcSize: {x: 1, y: 1, z: 1}
-  nmcSize: {x: 1.5, y: 1.5, z: 15}
+  nmcSize: {x: 1.5, y: 1.5, z: 1.5}
   worldSpacing: {x: 0.68, y: 0.68}
   gridPosition: {x: 0, y: -0.75}
   uiCellPrefab: {fileID: -5858508368108857520, guid: 3b0b355bd7bde2343adbf8510380c0b6, type: 3}
@@ -40,12 +40,12 @@ MonoBehaviour:
   delayBetweenStars: 0.2
   filledStarMid: {fileID: 21300000, guid: 61a13680c2431d145b831072f1fbe94b, type: 3}
   filledStar: {fileID: 21300000, guid: c211a86f2131843419c6c63756d7d10e, type: 3}
+  coins: 40
   emptyStarMid: {fileID: 21300000, guid: e9efab7ddfc259f4a893b0068d13c0ce, type: 3}
-  emptyStar: {fileID: 21300000, guid: bcea4a54f2c412e46b1ced87427a928e, type: 3}
+  emptyStar: {fileID: 21300000, guid: 5fa137a4de0ecea4d88590dfe9d57dc7, type: 3}
   handPointer: {fileID: 3577337031204279948, guid: 06cfd8813d58a34419bf4cd0d715a179, type: 3}
   tutorialDataList:
-  - cellIndex: 4
-    handPos: {x: -4.38, y: 0, z: 0}
-  - cellIndex: 8
-    handPos: {x: -4.38, y: -1.96, z: 0}
+  - handPos: {x: -376, y: -51, z: 0}
+  - handPos: {x: -142, y: 430, z: 0}
+  - handPos: {x: -121, y: -655, z: 0}
   handPointerPrefab: {fileID: 3577337031204279948, guid: 06cfd8813d58a34419bf4cd0d715a179, type: 3}

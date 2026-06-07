@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class LosePopup : UiPopupBase
@@ -6,6 +7,9 @@ public class LosePopup : UiPopupBase
     private GameThemeData _gameThemeData;
     private int _currentLevel;
     private int _currentTheme;
+
+    [SerializeField] private MultiSpriteAnimator _anim;
+    [SerializeField] private TMP_Text _headerCoinText;
 
     internal override void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData)
     {
@@ -26,12 +30,16 @@ public class LosePopup : UiPopupBase
             {
                 _currentLevel = (int)data[0];
                 _currentTheme = (int)data[1];
+
+                _headerCoinText.text = PlayerDataHandler.Player.GameCurrency.Coins.ToString();
             }
             GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Lose");
+
+            _anim.Play("Cat", "Idle");
         }
     }
 
-    public void TryAgain()
+    public void Replay()
     {
         Action OnChangeGameState = () => 
         {
@@ -44,16 +52,27 @@ public class LosePopup : UiPopupBase
         };
 
         SetGameTheme();
-        _popupHandler.HidePopup(() => { }, () => 
+        _popupHandler.HidePopup(() => 
         {
-            ScreenTransition.Instance.Play(
-                OnStarted => { }, 
-                OnPartial => 
-                {
-                    OnChangeGameState?.Invoke();
-                }, 
-                OnCompleted => { }
-            );
+
+        }, 
+        () => 
+        {
+            TransitionHelper.Instance.Play(
+            () =>
+            {
+                
+            },
+            () =>
+            {
+                OnChangeGameState?.Invoke();
+            },
+            () =>
+            {
+                
+            });
+
+            _anim.Stop("Cat");
         });        
     }
 
@@ -61,18 +80,29 @@ public class LosePopup : UiPopupBase
     {
         Action OnChangeGameState = () =>
         {
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
-        _popupHandler.HidePopup(() => { }, () => 
+        _popupHandler.HidePopup(() => 
         {
-            ScreenTransition.Instance.Play(
-                OnStarted => { }, 
-                OnPartial => 
-                {
-                    OnChangeGameState?.Invoke();
-                }, 
-                OnCompleted => { }
-            );
+
+        }, 
+        () => 
+        {
+            TransitionHelper.Instance.Play(
+            () =>
+            {
+                
+            },
+            () =>
+            {
+                OnChangeGameState?.Invoke();
+            },
+            () =>
+            {
+                
+            });
+            _anim.Stop("Cat");
         });
     }
 

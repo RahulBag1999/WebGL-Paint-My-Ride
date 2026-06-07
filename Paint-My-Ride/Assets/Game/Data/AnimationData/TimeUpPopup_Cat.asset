@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff290d54cc0a1242b5af9a6d11c55d4, type: 3}
+  m_Name: TimeUpPopup_Cat
+  m_EditorClassIdentifier: Assembly-CSharp::MultiSpriteAnimationData
+  animationName: Idle
+  frames:
+  - {fileID: 135313052, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1090998037, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1369382829, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1719805874, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1632219464, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 671884511, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 458369126, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 2084725244, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1546034236, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1159397904, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1071454710, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -904041864, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1310162964, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 764866804, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 500017817, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1904080242, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -269186426, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 162388447, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -205400210, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1360275394, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1165364658, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -941900802, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 516989521, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1727953440, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1505639993, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 96543120, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1740602650, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -558569927, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1903380358, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 334341640, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1734829561, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 1846797867, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: 747873952, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1095861859, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1217781920, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  - {fileID: -1695400567, guid: 3c467afe5d8b0b94497ee62d365de8cf, type: 3}
+  sampleRate: 12
+  loop: 1

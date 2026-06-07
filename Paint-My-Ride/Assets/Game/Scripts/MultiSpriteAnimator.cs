@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[Serializable]
-public class SpriteAnimationEntry
-{
-    public string animationName;
-    public Sprite[] frames;
-    public float sampleRate = 12f;
-    public bool loop = true;
-}
-
 public enum RenderTargetType
 {
     SpriteRenderer,
@@ -28,7 +19,7 @@ public class SpriteAnimationChannel
     public SpriteRenderer spriteRenderer;
     public Image uiImage;
 
-    public List<SpriteAnimationEntry> animations;
+    public List<MultiSpriteAnimationData> animations;
 
     [HideInInspector] public Sprite[] frames;
     [HideInInspector] public float sampleRate;
@@ -158,7 +149,7 @@ public class MultiSpriteAnimator : MonoBehaviour
         return null;
     }
 
-    private SpriteAnimationEntry GetAnimation(SpriteAnimationChannel ch, string name)
+    private MultiSpriteAnimationData GetAnimation(SpriteAnimationChannel ch, string name)
     {
         if (ch.animations == null) return null;
 

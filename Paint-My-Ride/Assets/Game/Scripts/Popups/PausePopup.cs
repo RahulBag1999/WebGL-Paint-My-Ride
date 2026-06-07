@@ -1,13 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
-using DG.Tweening;
 using System;
 
 public class PausePopup : UiPopupBase
 {
-    [SerializeField] private Image[] zImages; // Assign your Z images
-    [SerializeField] private float duration = 1.2f;
-    [SerializeField] private float delayBetween = 0.3f;
+    [SerializeField] private SleepZAnimator _sleepAnimator;
 
     private GameThemeData _gameThemeData;
     private int _currentLevel;
@@ -33,51 +29,15 @@ public class PausePopup : UiPopupBase
                 _currentLevel = (int)data[0];
                 _currentTheme = (int)data[1];
             }
-            //PlayLoop();
             GameHelper.Instance.InvokeAction(GameConstants.GameplayPause, true);
+
+            _sleepAnimator.Play();
         }
         else
         {
             GameHelper.Instance.InvokeAction(GameConstants.GameplayPause, false);
         }
-    }
-
-    private void PlayLoop()
-    {
-        for (int i = 0; i < zImages.Length; i++)
-        {
-            AnimateZ(zImages[i], i * delayBetween);
-        }
-    }
-
-    private void AnimateZ(Image z, float delay)
-    {
-        z.transform.localScale = Vector3.zero;
-
-        Color c = z.color;
-        c.a = 0;
-        z.color = c;
-
-        Sequence seq = DOTween.Sequence();
-
-        seq.SetDelay(delay)
-            .AppendCallback(() =>
-            {
-                // Reset before animation
-                z.transform.localScale = Vector3.zero;
-                Color col = z.color;
-                col.a = 0;
-                z.color = col;
-            })
-            .Append(z.DOFade(1f, duration * 0.3f)) // fade in
-            .Join(z.transform.DOScale(1f, duration).SetEase(Ease.OutBack))
-            .Join(z.transform.DOLocalMoveY(z.transform.localPosition.y + 30f, duration))// scale up
-            .Append(z.DOFade(0f, duration * 0.5f)) // fade out
-            .OnComplete(() =>
-            {
-                AnimateZ(z, 0); // loop
-            });
-    }
+    }   
 
     public void Restart()
     {
@@ -98,20 +58,20 @@ public class PausePopup : UiPopupBase
         }, 
         () => 
         {
-            ScreenTransition.Instance.Play(
-                OnStarted =>
-                {
-                    GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
-                },
-                OnPartial =>
-                {
-                    OnChangeGameState?.Invoke();
-                },
-                OnComplete =>
-                {
-                    GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, false);
-                }
-            );
+            TransitionHelper.Instance.Play(
+            () =>
+            {
+                GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
+            },
+            () =>
+            {
+                OnChangeGameState?.Invoke();
+            },
+            () =>
+            {
+                GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, false);
+                _sleepAnimator.Stop();
+            });
         });        
     }
 
@@ -124,6 +84,7 @@ public class PausePopup : UiPopupBase
     {
         Action OnChangeGameState = () => 
         {
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
         _popupHandler.HidePopup(
@@ -133,20 +94,19 @@ public class PausePopup : UiPopupBase
             },
             () =>
             {
-                ScreenTransition.Instance.Play(
-                    OnStarted => 
-                    {
-
-                    },
-                    OnPartial => 
-                    {
-                        OnChangeGameState?.Invoke();
-                    },
-                    OnCompleted => 
-                    {
-
-                    }
-                );
+                TransitionHelper.Instance.Play(
+                () =>
+                {
+                    
+                },
+                () =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                () =>
+                {
+                    _sleepAnimator.Stop();
+                });
             });
     }
 
@@ -178,6 +138,17 @@ public class PausePopup : UiPopupBase
 
     public void Close()
     {
-        _popupHandler.HidePopup();
+        _popupHandler.HidePopup(
+            () => 
+            {
+
+            }, 
+            () => 
+            {
+                if (GameConstants.IsLevelTutorial)
+                {
+                    GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, true);
+                }
+            });
     }
 }

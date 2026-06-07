@@ -11,6 +11,7 @@ public class GameplayScreen : UiScreenBase
     [SerializeField] private TMP_Text targetText;
 
     [SerializeField] private Image header;
+    [SerializeField] private Image levelHolder;
     [SerializeField] private Image coinHolder;
     [SerializeField] private Image targetGridBg;
     [SerializeField] private Image pause;
@@ -30,6 +31,7 @@ public class GameplayScreen : UiScreenBase
         base.Init(popupHandler, essentialConfigData);
         
         _gameThemeData = _essentialConfigData.AccessConfig<GameThemeData>();
+
         GameHelper.Instance.StartListening(GameConstants.OnTimerUpdate, UpdateTimer);
         GameHelper.Instance.StartListening(GameConstants.CoinAmountUpdated, UpdateCoins);
         GameHelper.Instance.StartListening(GameConstants.UndoAvailabilityChanged, UpdateUndoButton);
@@ -81,11 +83,12 @@ public class GameplayScreen : UiScreenBase
     private void UpdateUndoButton(object obj)
     {
         undoButton.interactable = (bool)obj;
-    }
+    }    
 
     private void UpdateGameBoardStyle()
     {
         header.sprite = _gameTheme.header;
+        levelHolder.sprite = _gameTheme.levelHolder;
         coinHolder.sprite = _gameTheme.coinHolder;
         targetGridBg.sprite = _gameTheme.targetGridBg;
         pause.sprite = _gameTheme.pause;

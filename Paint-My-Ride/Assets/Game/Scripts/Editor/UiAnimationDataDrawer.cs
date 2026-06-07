@@ -6,26 +6,23 @@ public class UIAnimationDataDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        int lines = 4; // type + duration + delay + ease
+        int lines = 3; // type + duration + ease
 
         var typeProp = property.FindPropertyRelative("type");
 
-        switch ((UIAnimator.AnimationType)typeProp.enumValueIndex)
+        if (typeProp != null)
         {
-            case UIAnimator.AnimationType.Move:
-                lines += 2;
-                break;
-
-            case UIAnimator.AnimationType.Scale:
-                lines += 2;
-                break;
-
-            case UIAnimator.AnimationType.Fade:
-                lines += 2;
-                break;
+            switch ((UIAnimator.AnimationType)typeProp.enumValueIndex)
+            {
+                case UIAnimator.AnimationType.Move:
+                case UIAnimator.AnimationType.Scale:
+                case UIAnimator.AnimationType.Fade:
+                    lines += 2;
+                    break;
+            }
         }
 
-        return lines * EditorGUIUtility.singleLineHeight + (lines * 2);
+        return lines * (EditorGUIUtility.singleLineHeight + 2f);
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -34,50 +31,99 @@ public class UIAnimationDataDrawer : PropertyDrawer
 
         float lineHeight = EditorGUIUtility.singleLineHeight;
         float spacing = 2f;
-        Rect rect = new Rect(position.x, position.y, position.width, lineHeight);
 
-        // Properties
+        Rect rect = new Rect(
+            position.x,
+            position.y,
+            position.width,
+            lineHeight);
+
         var typeProp = property.FindPropertyRelative("type");
         var durationProp = property.FindPropertyRelative("duration");
-        var delayProp = property.FindPropertyRelative("delay");
         var easeProp = property.FindPropertyRelative("ease");
 
-        // Draw common fields
+        if (typeProp == null)
+        {
+            EditorGUI.LabelField(rect, "AnimationData property error");
+            EditorGUI.EndProperty();
+            return;
+        }
+
+        // Common Fields
         EditorGUI.PropertyField(rect, typeProp);
         rect.y += lineHeight + spacing;
 
-        EditorGUI.PropertyField(rect, durationProp);
-        rect.y += lineHeight + spacing;
+        if (durationProp != null)
+        {
+            EditorGUI.PropertyField(rect, durationProp);
+            rect.y += lineHeight + spacing;
+        }
 
-        EditorGUI.PropertyField(rect, delayProp);
-        rect.y += lineHeight + spacing;
+        if (easeProp != null)
+        {
+            EditorGUI.PropertyField(rect, easeProp);
+            rect.y += lineHeight + spacing;
+        }
 
-        EditorGUI.PropertyField(rect, easeProp);
-        rect.y += lineHeight + spacing;
-
-        // Draw conditional fields
+        // Conditional Fields
         switch ((UIAnimator.AnimationType)typeProp.enumValueIndex)
         {
             case UIAnimator.AnimationType.Move:
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative("moveFrom"));
-                rect.y += lineHeight + spacing;
+                {
+                    var moveFromProp = property.FindPropertyRelative("moveFrom");
+                    var moveToProp = property.FindPropertyRelative("moveTo");
 
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative("moveTo"));
-                break;
+                    if (moveFromProp != null)
+                    {
+                        EditorGUI.PropertyField(rect, moveFromProp);
+                        rect.y += lineHeight + spacing;
+                    }
+
+                    if (moveToProp != null)
+                    {
+                        EditorGUI.PropertyField(rect, moveToProp);
+                    }
+
+                    break;
+                }
 
             case UIAnimator.AnimationType.Scale:
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative("scaleFrom"));
-                rect.y += lineHeight + spacing;
+                {
+                    var scaleFromProp = property.FindPropertyRelative("scaleFrom");
+                    var scaleToProp = property.FindPropertyRelative("scaleTo");
 
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative("scaleTo"));
-                break;
+                    if (scaleFromProp != null)
+                    {
+                        EditorGUI.PropertyField(rect, scaleFromProp);
+                        rect.y += lineHeight + spacing;
+                    }
+
+                    if (scaleToProp != null)
+                    {
+                        EditorGUI.PropertyField(rect, scaleToProp);
+                    }
+
+                    break;
+                }
 
             case UIAnimator.AnimationType.Fade:
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative("fadeFrom"));
-                rect.y += lineHeight + spacing;
+                {
+                    var fadeFromProp = property.FindPropertyRelative("fadeFrom");
+                    var fadeToProp = property.FindPropertyRelative("fadeTo");
 
-                EditorGUI.PropertyField(rect, property.FindPropertyRelative("fadeTo"));
-                break;
+                    if (fadeFromProp != null)
+                    {
+                        EditorGUI.PropertyField(rect, fadeFromProp);
+                        rect.y += lineHeight + spacing;
+                    }
+
+                    if (fadeToProp != null)
+                    {
+                        EditorGUI.PropertyField(rect, fadeToProp);
+                    }
+
+                    break;
+                }
         }
 
         EditorGUI.EndProperty();

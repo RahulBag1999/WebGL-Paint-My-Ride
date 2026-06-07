@@ -80,7 +80,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1736014231
-  m_SortingLayer: 12
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 498a575c07f93134ba796859c812f4c7, type: 3}
@@ -125,27 +125,7 @@ MonoBehaviour:
     spriteRenderer: {fileID: 2285716811508001462}
     uiImage: {fileID: 0}
     animations:
-    - animationName: Idle
-      frames:
-      - {fileID: 21300000, guid: 498a575c07f93134ba796859c812f4c7, type: 3}
-      - {fileID: 21300000, guid: 0ee87055894b3634db19b4392a067999, type: 3}
-      - {fileID: 21300000, guid: c4e87dae59e500943ac94bdd74e60771, type: 3}
-      - {fileID: 21300000, guid: 81f69b58ff8a6674aa3c459a2f2f8d75, type: 3}
-      - {fileID: 21300000, guid: 1d801e3a70b89784bb197b7cb57cee6f, type: 3}
-      - {fileID: 21300000, guid: c5ae4e48abf48ae429d1c024cfead459, type: 3}
-      - {fileID: 21300000, guid: d3144044fb45e9944aae5021020fc127, type: 3}
-      - {fileID: 21300000, guid: 70a98e1ba3c73b341b72ffe8224db1a7, type: 3}
-      - {fileID: 21300000, guid: c10cabe0643b62c43b17a6fae6cb5e5a, type: 3}
-      - {fileID: 21300000, guid: ced9e4d225d26dd46b69418848eb9a5c, type: 3}
-      - {fileID: 21300000, guid: 71fede08f1c7ad240aafe916092b7c5f, type: 3}
-      - {fileID: 21300000, guid: 983a9472dd61d0a43b7ee2e8f9cfca4f, type: 3}
-      - {fileID: 21300000, guid: 9db3bd3059a6e6645b3797290059ba20, type: 3}
-      - {fileID: 21300000, guid: f6599c64215330e4da2ac8baac3c5648, type: 3}
-      - {fileID: 21300000, guid: 37847e32a6a5a9146a6b03817a8790a4, type: 3}
-      - {fileID: 21300000, guid: 1e9178ee884304a40bb2096053847e62, type: 3}
-      - {fileID: 21300000, guid: fe9940fc47c7bf64780fcc2e43941234, type: 3}
-      sampleRate: 12
-      loop: 1
+    - {fileID: 11400000, guid: 83bc3fcdf6f7ec348973fedfaf15a6b3, type: 2}
     frames: []
     sampleRate: 0
     loop: 0

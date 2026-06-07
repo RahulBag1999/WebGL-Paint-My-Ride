@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 [Serializable]
 public class PreResultData
@@ -42,22 +43,25 @@ public class GameplayHelper : MonoBehaviour
     private LevelContainer _levelContainer;
     private LevelConfig _levelConfig;
     private UndoData _lastUndoData;
-    private HandPointer _handPointer;
+    private TutorialHelper _tutorialHelper;
 
     private int _currentLevel = -1;    
     private int _currentThemeId = -1;    
     private float _levelTimeRemaining = 0f;
     private int _tutorialStep = 0;
 
+    private Coroutine _tutorialCoroutine = null;
+
     private GameLoseType _gameLoseType = GameLoseType.NONE;
     private GameEndType _gameEndType = GameEndType.NONE;
 
     public bool IsGameContinue => _isGameContinue;
 
-    public  void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData)
+    public  void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData, TutorialHelper tutorialHelper)
     {
         _popupHandler = popupHandler;
         _essentialConfigData = essentialConfigData;
+        _tutorialHelper = tutorialHelper;
 
         _gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
         _levelTimingData = _essentialConfigData.AccessConfig<LevelTimingData>();
@@ -78,7 +82,7 @@ public class GameplayHelper : MonoBehaviour
 
         _currentLevel = level;
         _currentThemeId = themeId;
-        _isTutorialLevel = (_currentLevel == 0);
+        _isTutorialLevel = GameConstants.IsLevelTutorial = (_currentLevel == 0);
         _levelTimeRemaining = _levelTimingData.GetTimeForLevel(_currentLevel);
         _isGameContinue = true;
 
@@ -88,15 +92,33 @@ public class GameplayHelper : MonoBehaviour
 
         if (_isTutorialLevel) 
         {
-            _handPointer = Instantiate(_gameSettings.handPointerPrefab);
-            _handPointer.SetVisibility(true);
-            StartCoroutine(TutorialCoroutine());
-        } 
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, true);
+            _tutorialHelper.HandPointer.SetVisibility(true);
+            KillTutorialCoroutine();
+            _tutorialCoroutine = StartCoroutine(TutorialCoroutine());
+        }
+        else
+        {
+            _tutorialHelper.HandPointer.SetVisibility(false);
+            GameConstants.IsLevelTutorial = _isTutorialLevel;
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
+        }
 
         GameHelper.Instance.StartListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
         GameHelper.Instance.StartListening(GameConstants.GameplayRestart, HandleGameplayRestart);
         GameHelper.Instance.StartListening(GameConstants.CellColorCompletion, CellColorCompletion);
         GameHelper.Instance.StartListening(GameConstants.UndoMovableCell, UndoLastMove);        
+    }
+
+    private void KillTutorialCoroutine()
+    {
+        if (_tutorialCoroutine != null)
+        {
+            StopCoroutine(_tutorialCoroutine);
+            _tutorialCoroutine = null;
+
+            _tutorialStep = 0;
+        }
     }
 
     public void InitiateGameplay(PreResultData data)
@@ -204,19 +226,24 @@ public class GameplayHelper : MonoBehaviour
     {
         _isCellMoving = isMove;
 
-        if(!_isTutorialLevel) GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, CanUndo());
+        GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, CanUndo());
 
+        CheckHandpointerVisibilityWhileCellMoving(isMove);
+    }
+
+    private void CheckHandpointerVisibilityWhileCellMoving(bool isCellMoving)
+    {
         if (_isTutorialLevel)
         {
-            if(_handPointer != null)
+            if (_tutorialHelper.HandPointer != null)
             {
-                if (isMove)
+                if (isCellMoving)
                 {
-                    _handPointer.SetVisibility(false);
+                    _tutorialHelper.HandPointer.SetVisibility(false);
                 }
                 else
                 {
-                    _handPointer.SetVisibility(true);
+                    //_tutorialHelper.HandPointer.SetVisibility(true);
                 }
             }
         }
@@ -244,7 +271,7 @@ public class GameplayHelper : MonoBehaviour
             MovableCell c1 = null;
             foreach (var c in mCellList)
             {
-                if (c.GetIndex() == _gameSettings.tutorialDataList[0].cellIndex)
+                if (c.GetIndex() == 4)
                 {
                     c1 = c;
                     c1.SetInteractibility(true);
@@ -253,37 +280,46 @@ public class GameplayHelper : MonoBehaviour
                 {
                     c.SetInteractibility(false);
                 }
+            }      
+
+            _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
+            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Tap on the cat to move", _tutorialStep });
+            if (c1 == null)
+            {
+                yield break;
             }
-            HandleHandPointer(_tutorialStep);
+
             yield return new WaitUntil(() => !c1.IsMovable());
             _tutorialStep = 2;
 
             yield return new WaitUntil(() => _tutorialStep == 2);
-            MovableCell c2 = null;
+            _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
+            _tutorialHelper.HandPointer.SetVisibility(true);
+            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Create the target pattern", _tutorialStep });            
+
+            yield return new WaitUntil(() => _tutorialHelper.TutorialStep == 3);
+            _tutorialStep = 3;
             foreach (var c in mCellList)
             {
-                if (c.GetIndex() == _gameSettings.tutorialDataList[1].cellIndex)
-                {
-                    c2 = c;
-                    c2.SetInteractibility(true);
-                }
-                else
-                {
-                    c.SetInteractibility(false);
-                }
+                c.SetInteractibility(false);
             }
-            HandleHandPointer(_tutorialStep);
-            yield return new WaitUntil(() => !c2.IsMovable());
-            yield return null;
+            _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
+            _tutorialHelper.HandPointer.SetVisibility(true);
+            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Tap to undo last move", _tutorialStep });
+
+            yield return new WaitUntil(() => _tutorialStep == 4);
+            foreach (var c in mCellList)
+            {
+                c.SetInteractibility(true);
+            }
+            _tutorialHelper.HandPointer.SetVisibility(false);
+            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Create the target pattern", _tutorialStep });          
+            yield return new WaitUntil(() => _tutorialStep == 5);
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             Debug.Log("Tutorial completed!");
             yield break;
         }
-    }
-
-    private void HandleHandPointer(int tutStep)
-    {
-        _handPointer.SetPosition(_gameSettings.tutorialDataList[tutStep - 1].handPos);
-    }
+    }    
 
     private void CellColorCompletion(object obj)
     {
@@ -298,6 +334,8 @@ public class GameplayHelper : MonoBehaviour
                 //win
                 _gameEndType = GameEndType.WIN;
                 _gameLoseType = GameLoseType.NONE;
+
+                if (_isTutorialLevel) _tutorialStep = 5;
 
                 InitiateGameEnd();
             }
@@ -346,7 +384,7 @@ public class GameplayHelper : MonoBehaviour
         _lastUndoData.movableCell = cell;
         _lastUndoData.startPos = cell.transform.position;
 
-        if (!_isTutorialLevel) GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, true);
+        GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, true);
     }
 
     public void RecordCellState(NonMovableCell cell)
@@ -383,7 +421,9 @@ public class GameplayHelper : MonoBehaviour
 
         _lastUndoData = null;
 
-        if (!_isTutorialLevel) GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, false);        
+        GameHelper.Instance.InvokeAction(GameConstants.UndoAvailabilityChanged, false);
+
+        if (_isTutorialLevel && _tutorialStep == 3) _tutorialStep = 4;
     }
 
     public bool CanUndo()
@@ -403,6 +443,9 @@ public class GameplayHelper : MonoBehaviour
         if (isPause)
         {
             pauseCallback();
+
+            if(_isTutorialLevel)
+                GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
         }
         else
         {
@@ -443,10 +486,9 @@ public class GameplayHelper : MonoBehaviour
         _isGameRestart = false;
 
         _gameEndType = GameEndType.NONE;
-        _gameLoseType = GameLoseType.NONE;        
+        _gameLoseType = GameLoseType.NONE;
 
-        if (_handPointer != null && _isTutorialLevel)
-            Destroy(_handPointer.gameObject); _handPointer = null; _isTutorialLevel = false; _tutorialStep = 0;
+        KillTutorialCoroutine();        
 
         GameHelper.Instance.StopListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
         GameHelper.Instance.StopListening(GameConstants.GameplayRestart, HandleGameplayRestart);

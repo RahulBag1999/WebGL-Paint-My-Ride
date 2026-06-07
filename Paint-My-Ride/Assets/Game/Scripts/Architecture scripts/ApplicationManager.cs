@@ -15,6 +15,8 @@ public class ApplicationManager : MonoBehaviour
         _essentialConfigData.Init();
         _popupHandler.Init(_essentialConfigData);
         _applicationHandler.Init(_popupHandler, _essentialConfigData);
+
+        Application.targetFrameRate = 60;
     }
 
     private void SaveGame()

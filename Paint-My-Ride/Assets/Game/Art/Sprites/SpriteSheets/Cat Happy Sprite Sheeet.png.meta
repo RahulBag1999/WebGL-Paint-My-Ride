@@ -1,0 +1,973 @@
+fileFormatVersion: 2
+guid: be675c51a2fefb74cb5812cef1496892
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2910
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c69a0aa0e83cdd04ab170176726b1ad0
+      internalID: 387835159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_1
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 2910
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e2a25f4dd9d9e1478e9c3f7bbcff588
+      internalID: -1723064662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_2
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 2910
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55cc1bf5397a83e4a9215c25d4ab0cbd
+      internalID: 1174544269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_3
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 2910
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5212ffc31f4074d438874414b68f66e0
+      internalID: -1943991204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_4
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 2910
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 845edcfa4a996ed4ba44efdebf9c4ca2
+      internalID: -1097140816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_5
+      rect:
+        serializedVersion: 2
+        x: 2680
+        y: 2910
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: addd762975af28e4fa700287600ee366
+      internalID: 2006847696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2328
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 422571efda487a842b7be973a758758b
+      internalID: -934832175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_7
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 2328
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d98d948ea52691b44bdaaa87518c7925
+      internalID: -908980542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_8
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 2328
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3edc6dd2e2bf054788e520d63373908
+      internalID: 2075468385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_9
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 2328
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 228eb04a8de5ec9479603f5529fd6e4f
+      internalID: -913781861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_10
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 2328
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06a0a8ca29f60f34387a48506d0a63a5
+      internalID: -524870685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_11
+      rect:
+        serializedVersion: 2
+        x: 2680
+        y: 2328
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06484cb15a286ec45a5c07fcb28fa0f1
+      internalID: -2137211265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1746
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f3c60c06ac8ae64283bfc4e3692a110
+      internalID: 119006007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_13
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1746
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f097c086aeab694eaa6d24abccd8af7
+      internalID: -1897500226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_14
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1746
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 338f57ff6400b6d4987e8b330a5a7f46
+      internalID: 1994708900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_15
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1746
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14fcc549d2e7abc4aacca1b2b6bf2581
+      internalID: -734605783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_16
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 1746
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7913513b8c705df4393c295d6634194d
+      internalID: -504180766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_17
+      rect:
+        serializedVersion: 2
+        x: 2680
+        y: 1746
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4381396bdab8fdc4ab6b488f73236121
+      internalID: 1823516340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1164
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bea4673b679d1d42a6524ad7f7cd065
+      internalID: -162083461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_19
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1164
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 773d414f0ade9d04bbfe44e95e60f89f
+      internalID: 287682785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_20
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 1164
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d867ef332381cb47a2c35735936b601
+      internalID: 1357824594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_21
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1164
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edfede18887bbff4da3a68d88c4d3de3
+      internalID: -1087275177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_22
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 1164
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 977d1c7f0ea642c439391e369ea864f4
+      internalID: 1807166595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_23
+      rect:
+        serializedVersion: 2
+        x: 2680
+        y: 1164
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1137d329a3c74ce47926391693879e4c
+      internalID: -1416454651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 582
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce5df523aabdc2c46bb015902519a541
+      internalID: -593518182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_25
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 582
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a52ec453274cb9b4fab96d27680f74d8
+      internalID: 879077509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_26
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 582
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a404fbb5e3fd5654a80134e11e0506d6
+      internalID: -1146048657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_27
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 582
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4416ce863a49474c86bd094321a531c
+      internalID: 875213823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_28
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 582
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0411881c8afc3c499c5e6efbe999370
+      internalID: -901872909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_29
+      rect:
+        serializedVersion: 2
+        x: 2680
+        y: 582
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3110b5688d4648248831832385647582
+      internalID: -1578021833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fc036d8bd0c77647b7a0a847609297a
+      internalID: 1993469896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_31
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 0
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf21690a59fd2f04caf5f390408696b1
+      internalID: 683734450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_32
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 0
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aadc7f37cb31644facf3d0538efba40
+      internalID: 707824063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_33
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 0
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f94304422eeec334998d3e963b09b09e
+      internalID: -1695490585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_34
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 0
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 788ab5c332305a2448d24c0ba52cde9c
+      internalID: -1992450890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat Happy Sprite Sheeet_35
+      rect:
+        serializedVersion: 2
+        x: 2680
+        y: 0
+        width: 536
+        height: 582
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5620be674766d346800c3e929e5ec93
+      internalID: -913970168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: c6632ae6ad606914bad63dbb5cc90f9d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":6.0},"gridSpriteSize":{"x":536.0,"y":582.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Cat Happy Sprite Sheeet_0: 387835159
+      Cat Happy Sprite Sheeet_1: -1723064662
+      Cat Happy Sprite Sheeet_10: -524870685
+      Cat Happy Sprite Sheeet_11: -2137211265
+      Cat Happy Sprite Sheeet_12: 119006007
+      Cat Happy Sprite Sheeet_13: -1897500226
+      Cat Happy Sprite Sheeet_14: 1994708900
+      Cat Happy Sprite Sheeet_15: -734605783
+      Cat Happy Sprite Sheeet_16: -504180766
+      Cat Happy Sprite Sheeet_17: 1823516340
+      Cat Happy Sprite Sheeet_18: -162083461
+      Cat Happy Sprite Sheeet_19: 287682785
+      Cat Happy Sprite Sheeet_2: 1174544269
+      Cat Happy Sprite Sheeet_20: 1357824594
+      Cat Happy Sprite Sheeet_21: -1087275177
+      Cat Happy Sprite Sheeet_22: 1807166595
+      Cat Happy Sprite Sheeet_23: -1416454651
+      Cat Happy Sprite Sheeet_24: -593518182
+      Cat Happy Sprite Sheeet_25: 879077509
+      Cat Happy Sprite Sheeet_26: -1146048657
+      Cat Happy Sprite Sheeet_27: 875213823
+      Cat Happy Sprite Sheeet_28: -901872909
+      Cat Happy Sprite Sheeet_29: -1578021833
+      Cat Happy Sprite Sheeet_3: -1943991204
+      Cat Happy Sprite Sheeet_30: 1993469896
+      Cat Happy Sprite Sheeet_31: 683734450
+      Cat Happy Sprite Sheeet_32: 707824063
+      Cat Happy Sprite Sheeet_33: -1695490585
+      Cat Happy Sprite Sheeet_34: -1992450890
+      Cat Happy Sprite Sheeet_35: -913970168
+      Cat Happy Sprite Sheeet_4: -1097140816
+      Cat Happy Sprite Sheeet_5: 2006847696
+      Cat Happy Sprite Sheeet_6: -934832175
+      Cat Happy Sprite Sheeet_7: -908980542
+      Cat Happy Sprite Sheeet_8: 2075468385
+      Cat Happy Sprite Sheeet_9: -913781861
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

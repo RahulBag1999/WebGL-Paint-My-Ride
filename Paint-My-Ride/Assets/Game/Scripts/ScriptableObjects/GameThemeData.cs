@@ -23,6 +23,7 @@ public class GameThemeData : EssentialConfigScriptableObject
     public class GameTheme
     {
         public Sprite header;
+        public Sprite levelHolder;
         public Sprite coinHolder;
         public Sprite targetGridBg;
         public Sprite pause;

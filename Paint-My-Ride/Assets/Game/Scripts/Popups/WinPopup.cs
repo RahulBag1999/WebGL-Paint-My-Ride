@@ -1,9 +1,9 @@
-using DG.Tweening;
 using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PrimeTween;
 
 public class WinPopup : UiPopupBase
 {
@@ -12,6 +12,12 @@ public class WinPopup : UiPopupBase
     [SerializeField] private Image _starR;
 
     [SerializeField] private TMP_Text _coinText;
+    [SerializeField] private TMP_Text _headerCoinText;
+    [SerializeField] private MultiSpriteAnimator _anim;
+    [SerializeField] private HeartSpawner _heartSpawner;
+    [SerializeField] private CoinCollectAnimation _coinCollectAnim;
+
+    public Transform heartParent;
 
     private GameSettings _gameSettings;
     private GameThemeData _gameThemeData;
@@ -48,6 +54,7 @@ public class WinPopup : UiPopupBase
                 _currentTheme = (int)data[1];
                 _remainedTime = (float)data[2];
 
+                _headerCoinText.text = PlayerDataHandler.Player.GameCurrency.Coins.ToString();
                 _coinText.text = _gameSettings.coins.ToString();
 
                 SetGameTheme();
@@ -57,17 +64,20 @@ public class WinPopup : UiPopupBase
 
                 PlayStarAnimation(GetStars(_remainedTime / 100f));
             }
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             GameHelper.Instance.InvokeAction(GameConstants.PlayAudioOneShot, "Win");
+            _anim.Play("Cat", "Idle");
+            _heartSpawner.Play();
         }
         else
         {
             
         }
-    }
+    }   
 
     public void PlayStarAnimation(int starCount)
     {
-        StartCoroutine(AnimateStars(starCount));
+        StartCoroutine(AnimateStars(starCount));        
     }
 
     private IEnumerator AnimateStars(int count)
@@ -90,6 +100,7 @@ public class WinPopup : UiPopupBase
         {
             AnimateStar(_starR, _gameSettings.filledStar);
         }
+        _coinCollectAnim.PlayAnimation(_gameSettings.coins);
     }
 
     private void AnimateStar(Image star, Sprite sprite)
@@ -99,22 +110,26 @@ public class WinPopup : UiPopupBase
         star.transform.localScale = Vector3.zero;
 
         Color c = star.color;
-        c.a = 0;
+        c.a = 0f;
         star.color = c;
 
-        Sequence seq = DOTween.Sequence();
+        Sequence.Create()
+            .Group(Tween.Alpha(
+                star,
+                1f,
+                0.15f))
 
-        seq.Append(star.DOFade(1f, 0.15f));
+            .Group(Tween.Scale(
+                star.transform,
+                Vector3.one * 1.4f,
+                0.3f,
+                Ease.OutBack))
 
-        seq.Join(
-            star.transform.DOScale(1.4f, 0.3f)
-                .SetEase(Ease.OutBack)
-        );
-
-        seq.Append(
-            star.transform.DOScale(1f, 0.2f)
-                .SetEase(Ease.InOutSine)
-        );
+            .Chain(Tween.Scale(
+                star.transform,
+                Vector3.one,
+                0.2f,
+                Ease.InOutSine));
     }
 
     private int GetStars(float timePercentage)
@@ -135,7 +150,7 @@ public class WinPopup : UiPopupBase
 
     private void IncrementLevel()
     {
-        PlayerDataHandler.Player.GameCurrency.UpdateCoin(GameConstants.COINS_WIN);
+        //PlayerDataHandler.Player.GameCurrency.UpdateCoin(GameConstants.COINS_WIN);
         PlayerDataHandler.Player.GameplayProgress.UpdateMaxUnlockedLevelId(_currentLevel);
 
         _currentLevel = PlayerDataHandler.Player.GameplayProgress.MaxUnlockedLevelId;
@@ -159,20 +174,22 @@ public class WinPopup : UiPopupBase
         };
         _popupHandler.HidePopup(() => { }, () => 
         {
-            ScreenTransition.Instance.Play(
-                OnStarted => 
-                {
+            TransitionHelper.Instance.Play(
+            () =>
+            {
+                
+            },
+            () =>
+            {
+                OnChangeGameState?.Invoke();
+            },
+            () =>
+            {
+                HideCat();
+                _heartSpawner.StopAll();
+            });
 
-                }, 
-                OnPartial => 
-                {
-                    OnChangeGameState?.Invoke();
-                }, 
-                OnCompleted => 
-                {
-
-                }
-            );
+            HideCat();
         });
     }
 
@@ -180,26 +197,37 @@ public class WinPopup : UiPopupBase
     {
         Action OnChangeGameState = () => 
         {
+            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
 
-        _popupHandler.HidePopup(() => { }, () =>
+        _popupHandler.HidePopup(() => 
         {
-            ScreenTransition.Instance.Play(
-                OnStarted =>
-                {
 
-                },
-                OnPartial =>
-                {
-                    OnChangeGameState?.Invoke();
-                },
-                OnCompleted =>
-                {
+        }, 
+        () =>
+        {
+            TransitionHelper.Instance.Play(
+            () =>
+            {
+                
+            },
+            () =>
+            {
+                OnChangeGameState?.Invoke();
+            },
+            () =>
+            {
+                _heartSpawner.StopAll();
+            });
 
-                }
-            );
+            HideCat();
         });       
+    }
+
+    private void HideCat()
+    {
+        _anim.Stop("Cat");
     }
 
     private void ResetStars()

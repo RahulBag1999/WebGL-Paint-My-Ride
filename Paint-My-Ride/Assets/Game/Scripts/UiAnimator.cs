@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using DG.Tweening;
+using PrimeTween;
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +18,6 @@ public class UIAnimator : MonoBehaviour
         public AnimationType type;
 
         public float duration = 0.4f;
-        public float delay = 0f;
         public Ease ease = Ease.OutBack;
 
         // Move
@@ -61,7 +60,7 @@ public class UIAnimator : MonoBehaviour
 
     public void Kill()
     {
-        currentSequence?.Kill();
+        currentSequence.Stop();
     }
 
     #endregion
@@ -70,67 +69,83 @@ public class UIAnimator : MonoBehaviour
 
     private void PlayInternal(bool reverse, Action onComplete)
     {
-        currentSequence?.Kill();
-        currentSequence = DOTween.Sequence();
+        currentSequence.Stop();
+
+        currentSequence = Sequence.Create();
 
         foreach (var item in items)
         {
-            if (item.target == null) continue;
+            if (item.target == null)
+                continue;
 
-            Sequence elementSequence = DOTween.Sequence();
+            Sequence elementSequence = Sequence.Create();
 
             foreach (var anim in item.animations)
             {
-                Tween tween = null;
-
                 switch (anim.type)
                 {
                     case AnimationType.Move:
-                        Vector2 moveStart = reverse ? anim.moveTo : anim.moveFrom;
-                        Vector2 moveEnd = reverse ? anim.moveFrom : anim.moveTo;
-
-                        item.target.anchoredPosition = moveStart;
-
-                        tween = item.target.DOAnchorPos(moveEnd, anim.duration)
-                            .SetEase(anim.ease);
-                        break;
-
-                    case AnimationType.Scale:
-                        Vector3 scaleStart = reverse ? anim.scaleTo : anim.scaleFrom;
-                        Vector3 scaleEnd = reverse ? anim.scaleFrom : anim.scaleTo;
-
-                        item.target.localScale = scaleStart;
-
-                        tween = item.target.DOScale(scaleEnd, anim.duration)
-                            .SetEase(anim.ease);
-                        break;
-
-                    case AnimationType.Fade:
-                        if (item.canvasGroup == null)
                         {
-                            item.canvasGroup = item.target.GetComponent<CanvasGroup>();
-                            if (item.canvasGroup == null)
-                                item.canvasGroup = item.target.gameObject.AddComponent<CanvasGroup>();
+                            Vector2 moveStart = reverse ? anim.moveTo : anim.moveFrom;
+                            Vector2 moveEnd = reverse ? anim.moveFrom : anim.moveTo;
+
+                            item.target.anchoredPosition = moveStart;
+
+                            elementSequence.Group(
+                                Tween.UIAnchoredPosition(
+                                    item.target,
+                                    moveEnd,
+                                    anim.duration,
+                                    ease: anim.ease));
+
+                            break;
                         }
 
-                        float fadeStart = reverse ? anim.fadeTo : anim.fadeFrom;
-                        float fadeEnd = reverse ? anim.fadeFrom : anim.fadeTo;
+                    case AnimationType.Scale:
+                        {
+                            Vector3 scaleStart = reverse ? anim.scaleTo : anim.scaleFrom;
+                            Vector3 scaleEnd = reverse ? anim.scaleFrom : anim.scaleTo;
 
-                        item.canvasGroup.alpha = fadeStart;
+                            item.target.localScale = scaleStart;
 
-                        tween = item.canvasGroup.DOFade(fadeEnd, anim.duration)
-                            .SetEase(anim.ease);
-                        break;
-                }
+                            elementSequence.Group(
+                                Tween.Scale(
+                                    item.target,
+                                    scaleEnd,
+                                    anim.duration,
+                                    ease: anim.ease));
 
-                if (tween != null)
-                {
-                    tween.SetDelay(anim.delay);
-                    elementSequence.Join(tween);
+                            break;
+                        }
+
+                    case AnimationType.Fade:
+                        {
+                            if (item.canvasGroup == null)
+                            {
+                                item.canvasGroup = item.target.GetComponent<CanvasGroup>();
+
+                                if (item.canvasGroup == null)
+                                    item.canvasGroup = item.target.gameObject.AddComponent<CanvasGroup>();
+                            }
+
+                            float fadeStart = reverse ? anim.fadeTo : anim.fadeFrom;
+                            float fadeEnd = reverse ? anim.fadeFrom : anim.fadeTo;
+
+                            item.canvasGroup.alpha = fadeStart;
+
+                            elementSequence.Group(
+                                Tween.Alpha(
+                                    item.canvasGroup,
+                                    fadeEnd,
+                                    anim.duration,
+                                    ease: anim.ease));
+
+                            break;
+                        }
                 }
             }
 
-            currentSequence.Join(elementSequence);
+            currentSequence.Group(elementSequence);
         }
 
         currentSequence.OnComplete(() =>
