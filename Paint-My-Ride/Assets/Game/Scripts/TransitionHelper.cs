@@ -10,10 +10,8 @@ public class TransitionHelper : Singleton<TransitionHelper>
 
     protected override void OnInit()
     {
-        base.OnInit();
-
-        gameObject.AddComponent<TransitionManager>();
-        _transitionManager = TransitionManager.Instance();
+        base.OnInit();        
+        _transitionManager = GetComponent<TransitionManager>();
     }
 
     public void Play(Action onStart, Action onCutPoint, Action onEnd, float delay = 0f)
