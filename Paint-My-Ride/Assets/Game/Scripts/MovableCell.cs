@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -73,9 +74,16 @@ public class MovableCell : MonoBehaviour
             return;
         }
 
-        SetState(AnimationState.Idle);
+        StartCoroutine(DelayToSetIdle());
 
         SetOrientation();
+    }
+
+    private IEnumerator DelayToSetIdle()
+    {
+        yield return new WaitForSeconds(Random.Range(0f, 0.3f)); 
+        SetState(AnimationState.Idle);
+        yield break;
     }
 
     private void SetOrientation()

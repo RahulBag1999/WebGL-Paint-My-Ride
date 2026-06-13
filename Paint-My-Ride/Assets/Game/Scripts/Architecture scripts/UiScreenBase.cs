@@ -4,6 +4,7 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Canvas))]
+[RequireComponent(typeof(UIAnimator))]
 public abstract class UiScreenBase : MonoBehaviour
 {
     private Canvas _canvas;
@@ -20,7 +21,7 @@ public abstract class UiScreenBase : MonoBehaviour
     private void GetCanvas()
     {
         _canvas = GetComponent<Canvas>();
-    }
+    }   
 
     internal void SetScreenCanvasVisibility(bool isView)
     {

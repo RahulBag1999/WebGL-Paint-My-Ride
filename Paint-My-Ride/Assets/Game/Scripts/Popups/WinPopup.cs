@@ -17,6 +17,9 @@ public class WinPopup : UiPopupBase
     [SerializeField] private HeartSpawner _heartSpawner;
     [SerializeField] private CoinCollectAnimation _coinCollectAnim;
 
+    [SerializeField] private ButtonEffect _homeButton;
+    [SerializeField] private ButtonEffect _nextLevelButton;
+
     public Transform heartParent;
 
     private GameSettings _gameSettings;
@@ -159,6 +162,7 @@ public class WinPopup : UiPopupBase
     private void SetGameTheme()
     {
         _currentTheme = Utility.GetRandomNumber(_currentTheme, 0, _gameThemeData.gameThemeList.Count);
+        GameConstants.CurrentGameThemeId = _currentTheme;
     }
 
     public void NextLevel()
@@ -172,25 +176,29 @@ public class WinPopup : UiPopupBase
                 _currentTheme
             } });
         };
-        _popupHandler.HidePopup(() => { }, () => 
-        {
-            TransitionHelper.Instance.Play(
-            () =>
-            {
-                
-            },
-            () =>
-            {
-                OnChangeGameState?.Invoke();
-            },
-            () =>
-            {
-                HideCat();
-                _heartSpawner.StopAll();
-            });
 
-            HideCat();
-        });
+        _nextLevelButton.PlayEffect(() => 
+        {
+            _popupHandler.HidePopup(() => { }, () =>
+            {
+                TransitionHelper.Instance.Play(
+                () =>
+                {
+
+                },
+                () =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                () =>
+                {
+                    HideCat();
+                    _heartSpawner.StopAll();
+                });
+
+                HideCat();
+            });
+        });        
     }
 
     public void Home()
@@ -201,16 +209,18 @@ public class WinPopup : UiPopupBase
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
 
-        _popupHandler.HidePopup(() => 
+        _homeButton.PlayEffect(() => 
         {
+            _popupHandler.HidePopup(() =>
+            {
 
-        }, 
+            },
         () =>
         {
             TransitionHelper.Instance.Play(
             () =>
             {
-                
+
             },
             () =>
             {
@@ -222,7 +232,8 @@ public class WinPopup : UiPopupBase
             });
 
             HideCat();
-        });       
+        });
+        });        
     }
 
     private void HideCat()

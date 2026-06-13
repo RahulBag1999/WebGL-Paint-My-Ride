@@ -8,6 +8,8 @@ public class TimeUpPopup : UiPopupBase
 
     [SerializeField] private MultiSpriteAnimator _anim;
 
+    [SerializeField] private ButtonEffect _keepPlayingButton;
+
     internal override void Cleanup()
     {
         
@@ -39,13 +41,16 @@ public class TimeUpPopup : UiPopupBase
                 _preResultData 
             } });
         };
-        
-        _popupHandler.HidePopup(() => { }, () => 
-        {
-            OnChangeGameState?.Invoke();
 
-            _anim.Stop("Cat");
-        });
+        _keepPlayingButton.PlayEffect(() => 
+        {
+            _popupHandler.HidePopup(() => { }, () =>
+            {
+                OnChangeGameState?.Invoke();
+
+                _anim.Stop("Cat");
+            });
+        }); 
 
         PlayerDataHandler.Player.GameCurrency.UpdateCoin(-_gameSettings.levelFailContinueCoin);
     }

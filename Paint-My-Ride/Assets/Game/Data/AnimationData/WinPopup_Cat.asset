@@ -86,5 +86,5 @@ MonoBehaviour:
   - {fileID: 1174544269, guid: be675c51a2fefb74cb5812cef1496892, type: 3}
   - {fileID: -1723064662, guid: be675c51a2fefb74cb5812cef1496892, type: 3}
   - {fileID: 387835159, guid: be675c51a2fefb74cb5812cef1496892, type: 3}
-  sampleRate: 12
+  sampleRate: 18
   loop: 1

@@ -11,6 +11,9 @@ public class HomeScreen : UiScreenBase
     [SerializeField] private Canvas _homeBgCanvas;
     [SerializeField] private Button _playButton;
     [SerializeField] private MultiSpriteAnimator _msa;
+    [SerializeField] private UIAnimator _uiAnim;
+
+    [SerializeField] private ButtonEffect _playButtonEffect;
 
     private GameThemeData _gameThemeData;
 
@@ -41,6 +44,7 @@ public class HomeScreen : UiScreenBase
         UpdateHomeBgCanvas(true);
 
         _msa.Play("HomeCat", "Idle");
+        _uiAnim.Play();
     }
 
     private void UpdateHomeBgCanvas(bool isEnabled)
@@ -58,23 +62,26 @@ public class HomeScreen : UiScreenBase
                 _currentLevel,
                 _currentThemeId
             } });
-        };     
+        };
 
-        TransitionHelper.Instance.Play(
-            () => 
+        _playButtonEffect.PlayEffect(() => 
+        {
+            TransitionHelper.Instance.Play(
+            () =>
             {
                 _playButton.interactable = false;
-            }, 
-            () => 
+            },
+            () =>
             {
                 UpdateHomeBgCanvas(false);
                 changeGameStateAction?.Invoke();
-            }, 
-            () => 
+            },
+            () =>
             {
                 _msa.Stop("HomeCat");
                 _playButton.interactable = true;
             });
+        });        
     }
 
     private void UpdateCoins(object obj)
@@ -85,6 +92,7 @@ public class HomeScreen : UiScreenBase
     private void SetGameTheme()
     {
         _currentThemeId = Utility.GetRandomNumber(_currentThemeId, 0, _gameThemeData.gameThemeList.Count);
+        GameConstants.CurrentGameThemeId = _currentThemeId;
     }
 
     internal override void Cleanup()

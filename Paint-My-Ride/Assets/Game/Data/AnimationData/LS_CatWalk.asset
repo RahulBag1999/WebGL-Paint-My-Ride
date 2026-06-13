@@ -50,5 +50,5 @@ MonoBehaviour:
   - {fileID: -204842926, guid: 0d611a9b44d5e394dbd610f9dd6a6a29, type: 3}
   - {fileID: 1319812556, guid: 0d611a9b44d5e394dbd610f9dd6a6a29, type: 3}
   - {fileID: -500855173, guid: 0d611a9b44d5e394dbd610f9dd6a6a29, type: 3}
-  sampleRate: 12
+  sampleRate: 20
   loop: 1

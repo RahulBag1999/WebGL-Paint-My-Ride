@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,9 @@ public class GameplayScreen : UiScreenBase
     [SerializeField] private Image gameBgOverlay;
 
     [SerializeField] private Button undoButton;
+    [SerializeField] private ButtonEffect pauseButton;
+    [SerializeField] private UIAnimator uiAnim;
+    [SerializeField] private FlowerAnimator flowerAnim;
 
     private int _gameThemeId;
     private int _currentLevelId;
@@ -35,13 +39,15 @@ public class GameplayScreen : UiScreenBase
         GameHelper.Instance.StartListening(GameConstants.OnTimerUpdate, UpdateTimer);
         GameHelper.Instance.StartListening(GameConstants.CoinAmountUpdated, UpdateCoins);
         GameHelper.Instance.StartListening(GameConstants.UndoAvailabilityChanged, UpdateUndoButton);
-    }
+        GameHelper.Instance.StartListening(GameConstants.TutorialStep, UpdateTutorialStep);
+    }    
 
     internal override void Cleanup()
     {
         GameHelper.Instance.StopListening(GameConstants.OnTimerUpdate, UpdateTimer);
         GameHelper.Instance.StopListening(GameConstants.CoinAmountUpdated, UpdateCoins);
         GameHelper.Instance.StopListening(GameConstants.UndoAvailabilityChanged, UpdateUndoButton);
+        GameHelper.Instance.StopListening(GameConstants.TutorialStep, UpdateTutorialStep);
     }
 
     internal override void HandleGameStateChangeData(object[] data)
@@ -63,6 +69,8 @@ public class GameplayScreen : UiScreenBase
         }
         UpdateCoins(PlayerDataHandler.Player.GameCurrency.Coins);
         UpdateUndoButton(false);
+        flowerAnim.Init(_gameThemeId);
+        uiAnim.Play();
     }
 
     private void UpdateCoins(object obj)
@@ -83,7 +91,13 @@ public class GameplayScreen : UiScreenBase
     private void UpdateUndoButton(object obj)
     {
         undoButton.interactable = (bool)obj;
-    }    
+    }
+
+    private void UpdateTutorialStep(object obj)
+    {
+        object[] dataObjects = obj as object[];
+        int step = (int)dataObjects[1];
+    }
 
     private void UpdateGameBoardStyle()
     {
@@ -115,6 +129,9 @@ public class GameplayScreen : UiScreenBase
 
     public void Pause()
     {
-        _popupHandler.ShowPopup<PausePopup>(true, null, new object[] { _currentLevelId, _gameThemeId});
+        pauseButton.PlayEffect(() => 
+        {
+            _popupHandler.ShowPopup<PausePopup>(true, null, new object[] { _currentLevelId, _gameThemeId });
+        });        
     }    
 }

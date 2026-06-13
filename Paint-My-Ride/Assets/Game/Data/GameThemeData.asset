@@ -20,9 +20,12 @@ MonoBehaviour:
     pause: {fileID: 21300000, guid: 8589cf211e8b1e749b799fbbb81695c4, type: 3}
     undo: {fileID: 21300000, guid: b99062e6e3b044a41a28eac8e6c52467, type: 3}
     gridBg: {fileID: 21300000, guid: 1acca86f34205c444872acfccd3a62ec, type: 3}
-    gameBg: {fileID: 21300000, guid: 1fa26d13e2c190746bd8ab352a5a6094, type: 3}
+    gameBg: {fileID: 21300000, guid: dfdb38a77f0c0344fac14192c3b23449, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: c0e2cffcfd4728e48848ddeb0c16cc08, type: 3}
     fontAsset: {fileID: 11400000, guid: 55a5d96b9eb6248468444296cd615c99, type: 2}
+    themeColor: {r: 0.59607846, g: 0.7921569, b: 0.31764707, a: 1}
+    propsDataSet1: {fileID: 11400000, guid: 3dc71155c65c4e64da41f507f0c2e3a6, type: 2}
+    propsDataSet2: {fileID: 11400000, guid: 38c0f59c188557f41af26299852b8e79, type: 2}
   - header: {fileID: 21300000, guid: 036579c5f0b2eee41a7c634493a3e169, type: 3}
     levelHolder: {fileID: 21300000, guid: ddb4bef1ef71b674d821ec319590221a, type: 3}
     coinHolder: {fileID: 21300000, guid: 81d853e8599962a458b871246f0797b6, type: 3}
@@ -33,6 +36,9 @@ MonoBehaviour:
     gameBg: {fileID: 21300000, guid: 952cff93230a3ef4584d001bacdcb1bd, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: 6649f1c16cdf0794489caa3c5863df54, type: 3}
     fontAsset: {fileID: 11400000, guid: 346acd1957860304aa07736bbb81dcbf, type: 2}
+    themeColor: {r: 0.7490196, g: 0.44705883, b: 0.18039216, a: 1}
+    propsDataSet1: {fileID: 0}
+    propsDataSet2: {fileID: 0}
   - header: {fileID: 21300000, guid: 51a5ed1c1b8e433408451f41bbb1f11c, type: 3}
     levelHolder: {fileID: 21300000, guid: d2bf4b2699da02b419e7da52d6b186bd, type: 3}
     coinHolder: {fileID: 21300000, guid: 8bd9e488e9721a64d8eebbdf1b31066f, type: 3}
@@ -40,9 +46,12 @@ MonoBehaviour:
     pause: {fileID: 21300000, guid: 9a68a598c543e314fbb9a3bac9616590, type: 3}
     undo: {fileID: 21300000, guid: ccf391b2bd35dd9468313d5bfa16cc73, type: 3}
     gridBg: {fileID: 21300000, guid: 76e36eb1e2174e348b79b6234a4e81aa, type: 3}
-    gameBg: {fileID: 21300000, guid: 207aa063e21e7164b92d33a9da734562, type: 3}
+    gameBg: {fileID: 21300000, guid: 5b11e3ed58eaac24eab9c667b37d2b8b, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: 79fe128098e16e840b7cc502f5632357, type: 3}
     fontAsset: {fileID: 11400000, guid: 8de7bb01e12332848a59887d04fbe9e2, type: 2}
+    themeColor: {r: 0.5568628, g: 0.4117647, b: 0.84313726, a: 1}
+    propsDataSet1: {fileID: 11400000, guid: b0b1db99e4147ac4cbe54f4ee27e6906, type: 2}
+    propsDataSet2: {fileID: 11400000, guid: e99e4a64706b67d46b6f89a3f66d9054, type: 2}
   - header: {fileID: 21300000, guid: ad06310c37b484446858fe010df4cac3, type: 3}
     levelHolder: {fileID: 21300000, guid: 9dcab870d21a7454c8131853bc0f4687, type: 3}
     coinHolder: {fileID: 21300000, guid: d2ac961056ef91a4cae3cf53a278d10e, type: 3}
@@ -53,3 +62,6 @@ MonoBehaviour:
     gameBg: {fileID: 21300000, guid: f7fb5062c31e7c447ab43b577235555e, type: 3}
     gameBgOverlay: {fileID: 21300000, guid: 4a013902d7f4a7846aafcca7c9c307b0, type: 3}
     fontAsset: {fileID: 11400000, guid: 17d7c94508111944890d55d74955e424, type: 2}
+    themeColor: {r: 0.8745098, g: 0.5764706, b: 0.48235294, a: 1}
+    propsDataSet1: {fileID: 0}
+    propsDataSet2: {fileID: 0}

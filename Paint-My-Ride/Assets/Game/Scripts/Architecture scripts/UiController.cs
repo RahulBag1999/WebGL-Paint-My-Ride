@@ -10,13 +10,11 @@ public class UiController : MonoBehaviour, IController
     private Action<GameStates, object> _stateChanged;
     private Dictionary<Type, UiScreenBase> _uiScreenCollection = new Dictionary<Type, UiScreenBase>();
     private UiScreenBase _currentScreen;
-    bool _isGameOn;
 
     private PopupHandler _popupHandler;
 
     public void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData, Action<GameStates, object> stateChanged)
     {
-        _isGameOn = false;
         _popupHandler = popupHandler;
         _stateChanged = stateChanged;
         for (int i = 0; i < _uiScreens.Count; i++)

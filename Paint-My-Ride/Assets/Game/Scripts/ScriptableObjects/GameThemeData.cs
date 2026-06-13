@@ -35,5 +35,11 @@ public class GameThemeData : EssentialConfigScriptableObject
         [Space]
 
         public TMP_FontAsset fontAsset;
+        public Color themeColor;
+
+        [Space]
+
+        public MultiSpriteAnimationData propsDataSet1;
+        public MultiSpriteAnimationData propsDataSet2;
     }
 }

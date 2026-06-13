@@ -39,13 +39,25 @@ public class LoadingScreen : UiScreenBase
         _barImageRect = _barImage.rectTransform;
     }
 
+    internal override void HandleGameStateChangeData(object[] data)
+    {
+        // Set initial position BEFORE animation starts
+        Vector2 pos = _barImageRect.anchoredPosition;
+        pos.x = _startX;
+        _barImageRect.anchoredPosition = pos;
+
+        StartCoroutine(StartLoader());
+
+        _animator.Play("LoadingScreenCat", "Walk");
+    }
+
     private void Update()
     {
-        ParallaxBackground();
+        //ParallaxBackground();
 
         // UV scrolling
         Rect uvRect = _barImage.uvRect;
-        uvRect.x -= _gameSettings.uvScrollSpeed * Time.deltaTime;
+        uvRect.x -= -_gameSettings.uvScrollSpeed * Time.deltaTime;
         _barImage.uvRect = uvRect;
 
         // Loading dots animation
@@ -57,20 +69,13 @@ public class LoadingScreen : UiScreenBase
 
             _dotCount = (_dotCount + 1) % (_gameSettings.maxDots + 1);
 
-            _loadingText.text =
-                GameConstants.BASE_LOADING_TEXT +
-                new string('.', _dotCount);
+            _loadingText.text = GameConstants.BASE_LOADING_TEXT + new string('.', _dotCount);
         }
     }
 
     private void ParallaxBackground()
     {
-        _bg.uvRect = new Rect(
-            _bg.uvRect.position +
-            new Vector2(_gameSettings.x, _gameSettings.y) *
-            _gameSettings.parallaxSpeed *
-            Time.deltaTime,
-            _bg.uvRect.size);
+        _bg.uvRect = new Rect(_bg.uvRect.position + new Vector2(_gameSettings.x, _gameSettings.y) * _gameSettings.parallaxSpeed * Time.deltaTime, _bg.uvRect.size);
     }
 
     private IEnumerator StartLoader()
@@ -102,24 +107,11 @@ public class LoadingScreen : UiScreenBase
         finalPos.x = _endX;
         _barImageRect.anchoredPosition = finalPos;
 
-        GameHelper.Instance.InvokeAction(
-            GameConstants.ChangeGameState,
-            new object[] { GameStates.HOME, new object[] { false } });
+        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, new object[] { false } });
 
+        yield return new WaitForSeconds(2f);
         _animator.Stop("LoadingScreenCat");
-    }
-
-    internal override void HandleGameStateChangeData(object[] data)
-    {
-        // Set initial position BEFORE animation starts
-        Vector2 pos = _barImageRect.anchoredPosition;
-        pos.x = _startX;
-        _barImageRect.anchoredPosition = pos;
-
-        StartCoroutine(StartLoader());
-
-        _animator.Play("LoadingScreenCat", "Walk");
-    }
+    }   
 
     internal override void Cleanup()
     {

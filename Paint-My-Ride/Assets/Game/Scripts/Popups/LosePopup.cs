@@ -11,6 +11,9 @@ public class LosePopup : UiPopupBase
     [SerializeField] private MultiSpriteAnimator _anim;
     [SerializeField] private TMP_Text _headerCoinText;
 
+    [SerializeField] private ButtonEffect _homeButton;
+    [SerializeField] private ButtonEffect _replayButton;
+
     internal override void Init(PopupHandler popupHandler, EssentialConfigData essentialConfigData)
     {
         base.Init(popupHandler, essentialConfigData);
@@ -41,6 +44,7 @@ public class LosePopup : UiPopupBase
 
     public void Replay()
     {
+        SetGameTheme();
         Action OnChangeGameState = () => 
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
@@ -51,29 +55,31 @@ public class LosePopup : UiPopupBase
             }});
         };
 
-        SetGameTheme();
-        _popupHandler.HidePopup(() => 
+        _replayButton.PlayEffect(() => 
         {
+            _popupHandler.HidePopup(() =>
+            {
 
-        }, 
-        () => 
-        {
-            TransitionHelper.Instance.Play(
-            () =>
-            {
-                
             },
             () =>
             {
-                OnChangeGameState?.Invoke();
-            },
-            () =>
-            {
-                
+                TransitionHelper.Instance.Play(
+                () =>
+                {
+
+                },
+                () =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                () =>
+                {
+
+                });
+
+                _anim.Stop("Cat");
             });
-
-            _anim.Stop("Cat");
-        });        
+            }); 
     }
 
     public void Home()
@@ -83,31 +89,36 @@ public class LosePopup : UiPopupBase
             GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
-        _popupHandler.HidePopup(() => 
-        {
 
-        }, 
-        () => 
+        _homeButton.PlayEffect(() => 
         {
-            TransitionHelper.Instance.Play(
-            () =>
+            _popupHandler.HidePopup(() =>
             {
-                
+
             },
             () =>
             {
-                OnChangeGameState?.Invoke();
-            },
-            () =>
-            {
-                
+                TransitionHelper.Instance.Play(
+                () =>
+                {
+
+                },
+                () =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                () =>
+                {
+
+                });
+                _anim.Stop("Cat");
             });
-            _anim.Stop("Cat");
-        });
+            });        
     }
 
     private void SetGameTheme()
     {
         _currentTheme = Utility.GetRandomNumber(_currentTheme, 0, _gameThemeData.gameThemeList.Count);
+        GameConstants.CurrentGameThemeId = _currentTheme;
     }
 }

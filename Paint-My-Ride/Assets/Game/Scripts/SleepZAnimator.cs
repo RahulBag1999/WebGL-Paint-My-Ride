@@ -13,8 +13,8 @@ public class SleepZAnimator : MonoBehaviour
     [SerializeField] private float duration = 2f;
 
     [Header("Scale")]
-    [SerializeField] private float startScale = 1f;
     [SerializeField] private float endScale = 0.5f;
+    [SerializeField] private float maxScale = 1.1f;
 
     private bool isRunning = false;
     private float timer = 0f;
@@ -65,11 +65,10 @@ public class SleepZAnimator : MonoBehaviour
     {
         RectTransform z = Instantiate(zPrefab, spawnParent);
 
-        // Store prefab scale before setting to zero
-        Vector3 originalScale = z.localScale;
-
         z.anchoredPosition = Vector2.zero;
-        z.localScale = Vector3.zero;
+
+        // Start smaller
+        z.localScale = Vector3.one * 0.4f;
         z.localRotation = Quaternion.identity;
 
         CanvasGroup cg = z.GetComponent<CanvasGroup>();
@@ -81,8 +80,6 @@ public class SleepZAnimator : MonoBehaviour
 
         float randomRotation = Random.Range(-15f, 15f);
 
-        // DOTween equivalent:
-        // z.DORotate(...).SetLoops(2, LoopType.Yoyo)
         Sequence rotationSequence = Sequence.Create()
             .Chain(
                 Tween.LocalRotation(
@@ -99,28 +96,20 @@ public class SleepZAnimator : MonoBehaviour
 
         Sequence seq = Sequence.Create()
 
-            // Step 1: Pop-in
-            .Chain(
+            // Grow while moving
+            .Group(
                 Tween.Scale(
                     z,
-                    originalScale * startScale,
-                    0.2f,
+                    Vector3.one * maxScale,
+                    duration,
                     Ease.OutBack))
 
-            // Step 2: Run all together
             .Group(
                 Tween.UIAnchoredPosition(
                     z,
                     moveOffset,
                     duration,
                     Ease.OutSine))
-
-            .Group(
-                Tween.Scale(
-                    z,
-                    originalScale * endScale,
-                    duration,
-                    Ease.OutQuad))
 
             .Group(
                 Tween.Alpha(

@@ -5,6 +5,12 @@ public class PausePopup : UiPopupBase
 {
     [SerializeField] private SleepZAnimator _sleepAnimator;
 
+    [SerializeField] private ButtonEffect _homeButton;
+    [SerializeField] private ButtonEffect _restartButton;
+    [SerializeField] private ButtonEffect _closeButton;
+    [SerializeField] private ButtonEffect _musicToggle;
+    [SerializeField] private ButtonEffect _sfxToggle;
+
     private GameThemeData _gameThemeData;
     private int _currentLevel;
     private int _currentTheme;
@@ -41,6 +47,7 @@ public class PausePopup : UiPopupBase
 
     public void Restart()
     {
+        SetGameTheme();
         Action OnChangeGameState = () => 
         {
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.GAMEPLAY, new object[]
@@ -51,33 +58,36 @@ public class PausePopup : UiPopupBase
             } });
         };
 
-        SetGameTheme();
-        _popupHandler.HidePopup(() => 
+        _restartButton.PlayEffect(() => 
         {
-            GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
-        }, 
-        () => 
-        {
-            TransitionHelper.Instance.Play(
-            () =>
+            _popupHandler.HidePopup(() =>
             {
                 GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
             },
             () =>
             {
-                OnChangeGameState?.Invoke();
-            },
-            () =>
-            {
-                GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, false);
-                _sleepAnimator.Stop();
+                TransitionHelper.Instance.Play(
+                () =>
+                {
+                    GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
+                },
+                () =>
+                {
+                    OnChangeGameState?.Invoke();
+                },
+                () =>
+                {
+                    GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, false);
+                    _sleepAnimator.Stop();
+                });
             });
-        });        
+            });        
     }
 
     private void SetGameTheme()
     {
         _currentTheme = Utility.GetRandomNumber(_currentTheme, 0, _gameThemeData.gameThemeList.Count);
+        GameConstants.CurrentGameThemeId = _currentTheme;
     }
 
     public void Home()
@@ -87,7 +97,10 @@ public class PausePopup : UiPopupBase
             GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
             GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, null });
         };
-        _popupHandler.HidePopup(
+
+        _homeButton.PlayEffect(() => 
+        {
+            _popupHandler.HidePopup(
             () =>
             {
                 GameHelper.Instance.InvokeAction(GameConstants.GameplayRestart, true);
@@ -97,7 +110,7 @@ public class PausePopup : UiPopupBase
                 TransitionHelper.Instance.Play(
                 () =>
                 {
-                    
+
                 },
                 () =>
                 {
@@ -108,6 +121,7 @@ public class PausePopup : UiPopupBase
                     _sleepAnimator.Stop();
                 });
             });
+        });        
     }
 
     public void MusicToggle(bool state)
@@ -120,6 +134,7 @@ public class PausePopup : UiPopupBase
         {
             Debug.Log("Music off");
         }
+        _musicToggle.PlayEffect();
         AudioHandler.Instance.HandleMusicState(state);
     }
 
@@ -133,22 +148,26 @@ public class PausePopup : UiPopupBase
         {
             Debug.Log("Sound off");
         }
+        _sfxToggle.PlayEffect();
         AudioHandler.Instance.HandleSfxState(state);
     }
 
     public void Close()
     {
-        _popupHandler.HidePopup(
-            () => 
+        _closeButton.PlayEffect(() => 
+        {
+            _popupHandler.HidePopup(
+            () =>
             {
 
-            }, 
-            () => 
+            },
+            () =>
             {
                 if (GameConstants.IsLevelTutorial)
                 {
                     GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, true);
                 }
             });
+        });        
     }
 }
