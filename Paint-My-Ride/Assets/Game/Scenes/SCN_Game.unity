@@ -16155,8 +16155,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Tap on the cat to move
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 55a5d96b9eb6248468444296cd615c99, type: 2}
-  m_sharedMaterial: {fileID: -5580709492459441322, guid: 55a5d96b9eb6248468444296cd615c99, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 221b4af45113b0c49bef66c35996762c, type: 2}
+  m_sharedMaterial: {fileID: -3910743815980248039, guid: 221b4af45113b0c49bef66c35996762c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
