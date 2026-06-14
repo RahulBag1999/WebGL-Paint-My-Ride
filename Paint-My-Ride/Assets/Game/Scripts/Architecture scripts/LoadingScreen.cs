@@ -22,11 +22,7 @@ public class LoadingScreen : UiScreenBase
     [SerializeField] private float _startX = -783f;
     [SerializeField] private float _endX = 0f;
 
-    private bool _canCountdown = true;
-    private float _count = 0;
-
-    float startTime = Time.time;
-    private float _dotTimer = 0f;
+    private float startTime;
     private int _dotCount = 0;
 
     private GameSettings _gameSettings;
@@ -40,6 +36,8 @@ public class LoadingScreen : UiScreenBase
         _gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
 
         _barImageRect = _barImage.rectTransform;
+
+        startTime = Time.time;
     }
 
     internal override void HandleGameStateChangeData(object[] data)
@@ -92,9 +90,6 @@ public class LoadingScreen : UiScreenBase
 
     private async UniTaskVoid StartLoaderAsync(CancellationToken token)
     {
-        _count = 0f;
-        _canCountdown = true;
-
         while (!token.IsCancellationRequested)
         {
             await UniTask.Yield(PlayerLoopTiming.Update, token);
