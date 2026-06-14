@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 [Serializable]
 public class PreResultData
@@ -50,7 +51,7 @@ public class GameplayHelper : MonoBehaviour
     private float _levelTimeRemaining = 0f;
     private int _tutorialStep = 0;
 
-    private Coroutine _tutorialCoroutine = null;
+    private CancellationTokenSource _tutorialCts;
 
     private GameLoseType _gameLoseType = GameLoseType.NONE;
     private GameEndType _gameEndType = GameEndType.NONE;
@@ -94,8 +95,10 @@ public class GameplayHelper : MonoBehaviour
         {
             GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, true);
             _tutorialHelper.HandPointer.SetVisibility(true);
-            KillTutorialCoroutine();
-            _tutorialCoroutine = StartCoroutine(TutorialCoroutine());
+
+            KillTutorialOperation();
+            _tutorialCts = new CancellationTokenSource();
+            TutorialAsync(_tutorialCts.Token).Forget();
         }
         else
         {
@@ -110,15 +113,13 @@ public class GameplayHelper : MonoBehaviour
         GameHelper.Instance.StartListening(GameConstants.UndoMovableCell, UndoLastMove);        
     }
 
-    private void KillTutorialCoroutine()
+    private void KillTutorialOperation()
     {
-        if (_tutorialCoroutine != null)
-        {
-            StopCoroutine(_tutorialCoroutine);
-            _tutorialCoroutine = null;
+        _tutorialCts?.Cancel();
+        _tutorialCts?.Dispose();
+        _tutorialCts = null;
 
-            _tutorialStep = 0;
-        }
+        _tutorialStep = 0;
     }
 
     public void InitiateGameplay(PreResultData data)
@@ -259,67 +260,109 @@ public class GameplayHelper : MonoBehaviour
         mCellList.Add(mCell);
     }
 
-    private IEnumerator TutorialCoroutine()
+    private async UniTaskVoid TutorialAsync(CancellationToken token)
     {
-        while (_isTutorialLevel)
+        try
         {
-            yield return null;
-
-            _tutorialStep = 1;
-
-            yield return new WaitUntil(() => _tutorialStep == 1);
-            MovableCell c1 = null;
-            foreach (var c in mCellList)
+            while (_isTutorialLevel && !token.IsCancellationRequested)
             {
-                if (c.GetIndex() == 4)
+                _tutorialStep = 1;
+
+                await UniTask.WaitUntil(
+                    () => _tutorialStep == 1,
+                    cancellationToken: token);
+
+                MovableCell c1 = null;
+
+                foreach (var c in mCellList)
                 {
-                    c1 = c;
-                    c1.SetInteractibility(true);
+                    if (c.GetIndex() == 4)
+                    {
+                        c1 = c;
+                        c1.SetInteractibility(true);
+                    }
+                    else
+                    {
+                        c.SetInteractibility(false);
+                    }
                 }
-                else
+
+                _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
+
+                GameHelper.Instance.InvokeAction(
+                    GameConstants.TutorialStep,
+                    new object[] { "Tap on the cat to move", _tutorialStep });
+
+                if (c1 == null)
+                    return;
+
+                await UniTask.WaitUntil(
+                    () => !c1.IsMovable(),
+                    cancellationToken: token);
+
+                _tutorialStep = 2;
+
+                await UniTask.WaitUntil(
+                    () => _tutorialStep == 2,
+                    cancellationToken: token);
+
+                _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
+                _tutorialHelper.HandPointer.SetVisibility(true);
+
+                GameHelper.Instance.InvokeAction(
+                    GameConstants.TutorialStep,
+                    new object[] { "Create the target pattern", _tutorialStep });
+
+                await UniTask.WaitUntil(
+                    () => _tutorialHelper.TutorialStep == 3,
+                    cancellationToken: token);
+
+                _tutorialStep = 3;
+
+                foreach (var c in mCellList)
                 {
                     c.SetInteractibility(false);
                 }
-            }      
 
-            _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
-            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Tap on the cat to move", _tutorialStep });
-            if (c1 == null)
-            {
-                yield break;
+                _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
+                _tutorialHelper.HandPointer.SetVisibility(true);
+
+                GameHelper.Instance.InvokeAction(
+                    GameConstants.TutorialStep,
+                    new object[] { "Tap to undo last move", _tutorialStep });
+
+                await UniTask.WaitUntil(
+                    () => _tutorialStep == 4,
+                    cancellationToken: token);
+
+                foreach (var c in mCellList)
+                {
+                    c.SetInteractibility(true);
+                }
+
+                _tutorialHelper.HandPointer.SetVisibility(false);
+
+                GameHelper.Instance.InvokeAction(
+                    GameConstants.TutorialStep,
+                    new object[] { "Create the target pattern", _tutorialStep });
+
+                await UniTask.WaitUntil(
+                    () => _tutorialStep == 5,
+                    cancellationToken: token);
+
+                GameHelper.Instance.InvokeAction(
+                    GameConstants.OnUpdateTutorialCanvas,
+                    false);
+
+                Debug.Log("Tutorial completed!");
+                return;
             }
-
-            yield return new WaitUntil(() => !c1.IsMovable());
-            _tutorialStep = 2;
-
-            yield return new WaitUntil(() => _tutorialStep == 2);
-            _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
-            _tutorialHelper.HandPointer.SetVisibility(true);
-            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Create the target pattern", _tutorialStep });            
-
-            yield return new WaitUntil(() => _tutorialHelper.TutorialStep == 3);
-            _tutorialStep = 3;
-            foreach (var c in mCellList)
-            {
-                c.SetInteractibility(false);
-            }
-            _tutorialHelper.HandPointer.UpdateHandpointer(_tutorialStep);
-            _tutorialHelper.HandPointer.SetVisibility(true);
-            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Tap to undo last move", _tutorialStep });
-
-            yield return new WaitUntil(() => _tutorialStep == 4);
-            foreach (var c in mCellList)
-            {
-                c.SetInteractibility(true);
-            }
-            _tutorialHelper.HandPointer.SetVisibility(false);
-            GameHelper.Instance.InvokeAction(GameConstants.TutorialStep, new object[] { "Create the target pattern", _tutorialStep });          
-            yield return new WaitUntil(() => _tutorialStep == 5);
-            GameHelper.Instance.InvokeAction(GameConstants.OnUpdateTutorialCanvas, false);
-            Debug.Log("Tutorial completed!");
-            yield break;
         }
-    }    
+        catch (OperationCanceledException)
+        {
+            // Tutorial cancelled
+        }
+    }
 
     private void CellColorCompletion(object obj)
     {
@@ -488,7 +531,7 @@ public class GameplayHelper : MonoBehaviour
         _gameEndType = GameEndType.NONE;
         _gameLoseType = GameLoseType.NONE;
 
-        KillTutorialCoroutine();        
+        KillTutorialOperation();        
 
         GameHelper.Instance.StopListening(GameConstants.GameplayPause, HandleGameplayPauseStatus);
         GameHelper.Instance.StopListening(GameConstants.GameplayRestart, HandleGameplayRestart);

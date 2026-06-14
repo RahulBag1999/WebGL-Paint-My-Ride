@@ -1,5 +1,6 @@
-using System.Collections;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class MovableCell : MonoBehaviour
@@ -74,16 +75,19 @@ public class MovableCell : MonoBehaviour
             return;
         }
 
-        StartCoroutine(DelayToSetIdle());
+        DelayToSetIdle().Forget();
 
         SetOrientation();
     }
 
-    private IEnumerator DelayToSetIdle()
+    private async UniTaskVoid DelayToSetIdle()
     {
-        yield return new WaitForSeconds(Random.Range(0f, 0.3f)); 
+        await UniTask.Delay(
+            TimeSpan.FromSeconds(UnityEngine.Random.Range(0f, 0.3f)),
+            DelayType.DeltaTime,
+            cancellationToken: this.GetCancellationTokenOnDestroy());
+
         SetState(AnimationState.Idle);
-        yield break;
     }
 
     private void SetOrientation()

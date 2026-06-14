@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class NonMovableCell : MonoBehaviour
 {
@@ -82,20 +81,28 @@ public class NonMovableCell : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Car"))
+        if (other.TryGetComponent(out MovableCell mCell))
         {
-            if (other.TryGetComponent(out MovableCell mCell))
+            if (appliedColorCode != mCell.ColorCode)
             {
-                if (appliedColorCode != mCell.ColorCode)
-                {
-                    _gameplayHelper.RecordCellState(this);
+                _gameplayHelper.RecordCellState(this);
 
-                    appliedColorCode = mCell.ColorCode;
-                    spriteRenderer.sprite = _colorData.GetColorDatum(appliedColorCode).coloredTile;
+                appliedColorCode = mCell.ColorCode;
+                DelayToSetColorAsync(appliedColorCode).Forget();
 
-                    if (!isColoured) isColoured = true;
-                }
+                if (!isColoured)
+                    isColoured = true;
             }
         }
+    }
+
+    private async UniTaskVoid DelayToSetColorAsync(ColorCode colorCode)
+    {
+        await UniTask.Delay(150);
+
+        if (this == null)
+            return;
+
+        spriteRenderer.sprite = _colorData.GetColorDatum(colorCode).coloredTile;
     }
 }

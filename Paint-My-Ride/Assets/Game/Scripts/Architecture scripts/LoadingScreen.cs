@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +25,7 @@ public class LoadingScreen : UiScreenBase
     private bool _canCountdown = true;
     private float _count = 0;
 
+    float startTime = Time.time;
     private float _dotTimer = 0f;
     private int _dotCount = 0;
 
@@ -46,30 +49,39 @@ public class LoadingScreen : UiScreenBase
         pos.x = _startX;
         _barImageRect.anchoredPosition = pos;
 
-        StartCoroutine(StartLoader());
+        StartLoaderAsync(this.GetCancellationTokenOnDestroy()).Forget();
+        ScrollUvAsync(this.GetCancellationTokenOnDestroy()).Forget();
+        AnimateDotsAsync(this.GetCancellationTokenOnDestroy()).Forget();
 
         _animator.Play("LoadingScreenCat", "Walk");
     }
 
-    private void Update()
+    private async UniTaskVoid ScrollUvAsync(CancellationToken token)
     {
-        //ParallaxBackground();
-
-        // UV scrolling
-        Rect uvRect = _barImage.uvRect;
-        uvRect.x -= -_gameSettings.uvScrollSpeed * Time.deltaTime;
-        _barImage.uvRect = uvRect;
-
-        // Loading dots animation
-        _dotTimer += Time.deltaTime;
-
-        if (_dotTimer >= _gameSettings.dotDelay)
+        while (!token.IsCancellationRequested)
         {
-            _dotTimer = 0f;
+            Rect uvRect = _barImage.uvRect;
+            uvRect.x += _gameSettings.uvScrollSpeed * Time.deltaTime;
+            _barImage.uvRect = uvRect;
+
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
+        }
+    }
+
+    private async UniTaskVoid AnimateDotsAsync(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested)
+        {
+            await UniTask.Delay(
+                System.TimeSpan.FromSeconds(_gameSettings.dotDelay),
+                DelayType.DeltaTime,
+                cancellationToken: token);
 
             _dotCount = (_dotCount + 1) % (_gameSettings.maxDots + 1);
 
-            _loadingText.text = GameConstants.BASE_LOADING_TEXT + new string('.', _dotCount);
+            _loadingText.text =
+                GameConstants.BASE_LOADING_TEXT +
+                new string('.', _dotCount);
         }
     }
 
@@ -78,28 +90,24 @@ public class LoadingScreen : UiScreenBase
         _bg.uvRect = new Rect(_bg.uvRect.position + new Vector2(_gameSettings.x, _gameSettings.y) * _gameSettings.parallaxSpeed * Time.deltaTime, _bg.uvRect.size);
     }
 
-    private IEnumerator StartLoader()
+    private async UniTaskVoid StartLoaderAsync(CancellationToken token)
     {
-        _count = 0;
+        _count = 0f;
         _canCountdown = true;
 
-        while (_canCountdown)
+        while (!token.IsCancellationRequested)
         {
-            yield return null;
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
 
-            _count += Time.deltaTime;
+            float progress = Mathf.Clamp01(
+                (Time.time - startTime) / _gameSettings.loadingTime);
 
-            float progress = Mathf.Clamp01(_count / _gameSettings.loadingTime);
-
-            // Move filler image from left to right
             Vector2 pos = _barImageRect.anchoredPosition;
             pos.x = Mathf.Lerp(_startX, _endX, progress);
             _barImageRect.anchoredPosition = pos;
 
             if (progress >= 1f)
-            {
-                _canCountdown = false;
-            }
+                break;
         }
 
         // Ensure final position
@@ -107,11 +115,17 @@ public class LoadingScreen : UiScreenBase
         finalPos.x = _endX;
         _barImageRect.anchoredPosition = finalPos;
 
-        GameHelper.Instance.InvokeAction(GameConstants.ChangeGameState, new object[] { GameStates.HOME, new object[] { false } });
+        GameHelper.Instance.InvokeAction(
+            GameConstants.ChangeGameState,
+            new object[] { GameStates.HOME, new object[] { false } });
 
-        yield return new WaitForSeconds(2f);
+        await UniTask.Delay(
+            TimeSpan.FromSeconds(2f),
+            DelayType.DeltaTime,
+            cancellationToken: token);
+
         _animator.Stop("LoadingScreenCat");
-    }   
+    }
 
     internal override void Cleanup()
     {

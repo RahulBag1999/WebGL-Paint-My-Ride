@@ -1,9 +1,11 @@
+using Cysharp.Threading.Tasks;
+using PrimeTween;
 using System;
 using System.Collections;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PrimeTween;
 
 public class WinPopup : UiPopupBase
 {
@@ -76,33 +78,45 @@ public class WinPopup : UiPopupBase
         {
             
         }
-    }   
+    }
 
     public void PlayStarAnimation(int starCount)
     {
-        StartCoroutine(AnimateStars(starCount));        
+        AnimateStarsAsync(starCount, this.GetCancellationTokenOnDestroy()).Forget();
     }
 
-    private IEnumerator AnimateStars(int count)
+    private async UniTaskVoid AnimateStarsAsync(int count, CancellationToken token)
     {
-        yield return new WaitForSeconds(1f);
-        
+        await UniTask.Delay(
+            TimeSpan.FromSeconds(1f),
+            DelayType.DeltaTime,
+            cancellationToken: token);
+
         if (count >= 1)
         {
             AnimateStar(_starL, _gameSettings.filledStar);
-            yield return new WaitForSeconds(_gameSettings.delayBetweenStars);
+
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(_gameSettings.delayBetweenStars),
+                DelayType.DeltaTime,
+                cancellationToken: token);
         }
 
         if (count >= 2)
         {
             AnimateStar(_starMiddle, _gameSettings.filledStarMid);
-            yield return new WaitForSeconds(_gameSettings.delayBetweenStars);
+
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(_gameSettings.delayBetweenStars),
+                DelayType.DeltaTime,
+                cancellationToken: token);
         }
 
         if (count >= 3)
         {
             AnimateStar(_starR, _gameSettings.filledStar);
         }
+
         _coinCollectAnim.PlayAnimation(_gameSettings.coins);
     }
 

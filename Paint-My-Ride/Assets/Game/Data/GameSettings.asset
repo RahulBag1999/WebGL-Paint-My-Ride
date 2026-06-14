@@ -45,7 +45,7 @@ MonoBehaviour:
   emptyStar: {fileID: 21300000, guid: 5fa137a4de0ecea4d88590dfe9d57dc7, type: 3}
   handPointer: {fileID: 3577337031204279948, guid: 06cfd8813d58a34419bf4cd0d715a179, type: 3}
   tutorialDataList:
-  - handPos: {x: -341, y: -35, z: 0}
-  - handPos: {x: -167, y: 568, z: 0}
-  - handPos: {x: -156, y: -728, z: 0}
+  - handPos: {x: -341, y: -2.1, z: 0}
+  - handPos: {x: -167, y: 547.3, z: 0}
+  - handPos: {x: -156, y: -697.8, z: 0}
   handPointerPrefab: {fileID: 3577337031204279948, guid: 06cfd8813d58a34419bf4cd0d715a179, type: 3}

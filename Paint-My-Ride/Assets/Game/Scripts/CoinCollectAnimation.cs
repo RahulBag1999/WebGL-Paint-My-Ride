@@ -8,6 +8,8 @@ public class CoinCollectAnimation : MonoBehaviour
     [Header("References")]
     [SerializeField] private RectTransform spawnPoint;
     [SerializeField] private RectTransform targetPoint;
+    [SerializeField] private RectTransform coinBox;
+    [SerializeField] private RectTransform coinIcon;
     [SerializeField] private Transform coinParent;
     [SerializeField] private GameObject coinPrefab;
 
@@ -33,6 +35,8 @@ public class CoinCollectAnimation : MonoBehaviour
     private bool isPlaying;
 
     private readonly List<(GameObject coin, Sequence seq)> activeCoins = new();
+
+    private Sequence coinBoxPunchSequence;
 
     private void Start()
     {
@@ -157,6 +161,9 @@ public class CoinCollectAnimation : MonoBehaviour
 
             AddCoins(coinsAddedPerHit);
 
+            PunchCoinBox();
+            PunchCoinIcon();
+
             Destroy(coin);
         });
     }
@@ -253,6 +260,50 @@ public class CoinCollectAnimation : MonoBehaviour
             // Update actual wallet
             PlayerDataHandler.Player.GameCurrency.UpdateCoin(rewardCoins);
         }
+    }    
+
+    private void PunchCoinBox()
+    {
+        coinBoxPunchSequence.Stop();
+
+        coinBox.localScale = Vector3.one;
+
+        coinBoxPunchSequence = Sequence.Create()
+            .Chain(
+                Tween.Scale(
+                    coinBox,
+                    Vector3.one * 1.12f,
+                    0.08f,
+                    Ease.OutQuad))
+            .Chain(
+                Tween.Scale(
+                    coinBox,
+                    Vector3.one * 0.95f,
+                    0.05f,
+                    Ease.InQuad))
+            .Chain(
+                Tween.Scale(
+                    coinBox,
+                    Vector3.one,
+                    0.08f,
+                    Ease.OutBack));
+    }
+
+    private void PunchCoinIcon()
+    {
+        Sequence.Create()
+            .Chain(
+                Tween.Scale(
+                    coinIcon,
+                    Vector3.one * 1.25f,
+                    0.08f,
+                    Ease.OutBack))
+            .Chain(
+                Tween.Scale(
+                    coinIcon,
+                    Vector3.one,
+                    0.10f,
+                    Ease.OutQuad));
     }
 
     [ContextMenu("Stop")]
