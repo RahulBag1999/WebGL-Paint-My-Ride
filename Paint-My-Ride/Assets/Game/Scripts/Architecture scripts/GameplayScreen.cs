@@ -23,7 +23,6 @@ public class GameplayScreen : UiScreenBase
     [SerializeField] private Button undoButton;
     [SerializeField] private ButtonEffect pauseButton;
     [SerializeField] private UIAnimator uiAnim;
-    [SerializeField] private FlowerAnimator flowerAnim;
 
     private int _gameThemeId;
     private int _currentLevelId;
@@ -69,7 +68,6 @@ public class GameplayScreen : UiScreenBase
         }
         UpdateCoins(PlayerDataHandler.Player.GameCurrency.Coins);
         UpdateUndoButton(false);
-        flowerAnim.Init(_gameThemeId);
         uiAnim.Play();
     }
 

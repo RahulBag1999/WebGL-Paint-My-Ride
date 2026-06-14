@@ -78,7 +78,7 @@ public class HomeScreen : UiScreenBase
             },
             () =>
             {
-                _msa.Stop("HomeCat");
+                //_msa.Stop("HomeCat");
                 _playButton.interactable = true;
             });
         });        

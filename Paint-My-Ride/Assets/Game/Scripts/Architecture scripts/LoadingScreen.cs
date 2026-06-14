@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class LoadingScreen : UiScreenBase
 {
     [SerializeField] private RawImage _bg;
@@ -22,8 +21,9 @@ public class LoadingScreen : UiScreenBase
     [SerializeField] private float _startX = -783f;
     [SerializeField] private float _endX = 0f;
 
-    private float startTime;
+    private float _count;
     private int _dotCount = 0;
+    private bool _canCountdown = false;
 
     private GameSettings _gameSettings;
 
@@ -36,8 +36,6 @@ public class LoadingScreen : UiScreenBase
         _gameSettings = _essentialConfigData.AccessConfig<GameSettings>();
 
         _barImageRect = _barImage.rectTransform;
-
-        startTime = Time.time;
     }
 
     internal override void HandleGameStateChangeData(object[] data)
@@ -90,25 +88,30 @@ public class LoadingScreen : UiScreenBase
 
     private async UniTaskVoid StartLoaderAsync(CancellationToken token)
     {
-        while (!token.IsCancellationRequested)
+        _count = 0f;
+        _canCountdown = true;
+
+        Vector2 pos = _barImageRect.anchoredPosition;
+        pos.x = _startX;
+        _barImageRect.anchoredPosition = pos;
+
+        while (_canCountdown && !token.IsCancellationRequested)
         {
             await UniTask.Yield(PlayerLoopTiming.Update, token);
 
-            float progress = Mathf.Clamp01(
-                (Time.time - startTime) / _gameSettings.loadingTime);
+            _count += Time.deltaTime;
 
-            Vector2 pos = _barImageRect.anchoredPosition;
+            float progress = Mathf.Clamp01(_count / _gameSettings.loadingTime);
+
             pos.x = Mathf.Lerp(_startX, _endX, progress);
             _barImageRect.anchoredPosition = pos;
 
             if (progress >= 1f)
-                break;
+                _canCountdown = false;
         }
 
-        // Ensure final position
-        Vector2 finalPos = _barImageRect.anchoredPosition;
-        finalPos.x = _endX;
-        _barImageRect.anchoredPosition = finalPos;
+        pos.x = _endX;
+        _barImageRect.anchoredPosition = pos;
 
         GameHelper.Instance.InvokeAction(
             GameConstants.ChangeGameState,

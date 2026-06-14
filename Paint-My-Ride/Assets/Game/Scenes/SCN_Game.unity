@@ -1981,7 +1981,6 @@ MonoBehaviour:
   undoButton: {fileID: 1388264680}
   pauseButton: {fileID: 702703612}
   uiAnim: {fileID: 228108667}
-  flowerAnim: {fileID: 1800949363}
 --- !u!223 &228108665
 Canvas:
   m_ObjectHideFlags: 0
@@ -10550,6 +10549,7 @@ MonoBehaviour:
   _audioHandler: {fileID: 1758465797}
   _tutorialHelper: {fileID: 1857045723}
   _cloudManager: {fileID: 556286718}
+  _flowerAnim: {fileID: 1800949363}
 --- !u!4 &1204390745
 Transform:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour, IController
     [SerializeField] private AudioHandler _audioHandler;
     [SerializeField] private TutorialHelper _tutorialHelper;
     [SerializeField] private CloudManager _cloudManager;
+    [SerializeField] private FlowerAnimator _flowerAnim;
 
     private PopupHandler _popupHandler;
     private EssentialConfigData _essentialConfigData;
@@ -46,10 +47,12 @@ public class GameController : MonoBehaviour, IController
                 _gridGenerator.Cleanup();
 
                 _cloudManager.UpdateView(true);
+                _flowerAnim.StopAllAnimations();
                 break;
 
             case GameStates.GAMEPLAY:
                 _cloudManager.UpdateView(false);
+
                 object[] dataObjects = (object[])data;
 
                 if ((bool)dataObjects[0])
@@ -63,6 +66,7 @@ public class GameController : MonoBehaviour, IController
                     _gameplayHelper.InitiateGameplay((int)dataObjects[1], (int)dataObjects[2]);
                     _gridGenerator.SetGridBg((int)dataObjects[2]);
                     _gridGenerator.GenerateAllGrid(GameConstants.CurrentLevelConfig);
+                    _flowerAnim.Init((int)dataObjects[2]);
                 }                
                 break;
 
