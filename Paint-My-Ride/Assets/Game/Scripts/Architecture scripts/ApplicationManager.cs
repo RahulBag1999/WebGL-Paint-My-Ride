@@ -1,4 +1,5 @@
 using UnityEngine;
+using GameAnalyticsSDK;
 
 public class ApplicationManager : MonoBehaviour
 {
@@ -19,6 +20,15 @@ public class ApplicationManager : MonoBehaviour
         Application.targetFrameRate = 60;
     }
 
+    private void Start()
+    {
+        InitializeGameAnalytics();
+    }
+
+    private void InitializeGameAnalytics()
+    {
+        GameAnalytics.Initialize();
+    }
     private void SaveGame()
     {
         if (_playerSaveData.IsFirstTime)
