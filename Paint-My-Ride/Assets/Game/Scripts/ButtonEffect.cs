@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PrimeTween;
 using System;
+
 public class ButtonEffect : MonoBehaviour
 {
     [Header("Target")]

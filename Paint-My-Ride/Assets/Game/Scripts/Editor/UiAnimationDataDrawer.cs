@@ -1,5 +1,6 @@
-using UnityEditor;
 using UnityEngine;
+
+using UnityEditor;
 
 [CustomPropertyDrawer(typeof(UIAnimator.AnimationData))]
 public class UIAnimationDataDrawer : PropertyDrawer

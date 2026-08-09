@@ -1,5 +1,7 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+
+
+using UnityEditor;
 
 [CustomEditor(typeof(LevelConfig))]
 public class LevelConfigEditor : Editor

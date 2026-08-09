@@ -1,5 +1,7 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+
+
+using UnityEditor;
 
 [CustomPropertyDrawer(typeof(SpriteAnimationChannel))]
 public class SpriteAnimationChannelDrawer : PropertyDrawer
